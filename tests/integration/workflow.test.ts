@@ -1,6 +1,7 @@
 import { cp, mkdtemp, rm } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { readFile } from "node:fs/promises";
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
@@ -40,6 +41,17 @@ describe("workflow integration", () => {
       expect(indexMap.entries.length + indexMap.manifests.length).toBeGreaterThan(0);
       expect(results.length).toBeGreaterThan(0);
       expect(verifyResult.valid).toBe(true);
+      expect(results.some((item) => item.runner === "heuristic")).toBe(true);
+
+      const docsRoot = path.join(tempDir, ".code-explorer", "docs");
+      const startHere = await readFile(path.join(docsRoot, "START_HERE.md"), "utf8");
+      const highlights = await readFile(path.join(docsRoot, "HIGHLIGHTS.md"), "utf8");
+      const moduleDoc = await readFile(path.join(docsRoot, "modules", "wave_1_01.md"), "utf8");
+
+      expect(startHere).toContain("START_HERE");
+      expect(highlights.match(/^### /gm)?.length ?? 0).toBeGreaterThanOrEqual(2);
+      expect(moduleDoc).toContain("# 一条关键执行路径");
+      expect(moduleDoc).toMatch(/`[^`]+\//);
     });
   }
 });

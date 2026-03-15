@@ -38,12 +38,27 @@ export function createProgram(): Command {
     .option("--resume", "从已有状态继续")
     .option("--concurrency <number>", "并发度")
     .option("--runner <mode>", "执行器模式：teams|sdk|auto", "auto")
-    .action(async (repoPath: string, options: { concurrency?: string; runner?: CodeExplorerConfig["runnerMode"] }) => {
+    .option("--doc-language <language>", "文档语言：auto|zh-CN|en-US")
+    .action(
+      async (
+        repoPath: string,
+        options: {
+          concurrency?: string;
+          runner?: CodeExplorerConfig["runnerMode"];
+          docLanguage?: CodeExplorerConfig["docLanguage"];
+        },
+      ) => {
       const absoluteRepoPath = path.resolve(repoPath);
-      const configOverrides: Partial<CodeExplorerConfig> = {
-        runnerMode: options.runner ?? "auto",
-        concurrency: options.concurrency ? Number(options.concurrency) : undefined,
-      };
+      const configOverrides: Partial<CodeExplorerConfig> = {};
+      if (options.runner) {
+        configOverrides.runnerMode = options.runner;
+      }
+      if (options.concurrency) {
+        configOverrides.concurrency = Number(options.concurrency);
+      }
+      if (options.docLanguage) {
+        configOverrides.docLanguage = options.docLanguage;
+      }
       const indexMap = await runPhase0(absoluteRepoPath, configOverrides);
       const wavePlans = await runPhase1(absoluteRepoPath, indexMap, configOverrides);
       const results = await runPhase2(absoluteRepoPath, wavePlans, configOverrides);
@@ -52,7 +67,8 @@ export function createProgram(): Command {
       process.stdout.write(
         `已完成阶段 0-4，产物目录: ${resolveOutputRoot(absoluteRepoPath)}，校验${verifyResult.valid ? "通过" : "失败"}\n`,
       );
-    });
+      },
+    );
 
   program
     .command("status")

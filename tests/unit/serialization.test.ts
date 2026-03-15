@@ -25,6 +25,13 @@ describe("serialization", () => {
         wave: "WAVE_1",
         title: "task",
         goal: "goal",
+        teaching_unit: "项目入口与配置",
+        teaching_unit_kind: "core",
+        learning_order: 1,
+        why_this_matters: "matters",
+        why_this_order: "order",
+        key_questions: ["q1"],
+        recommended_prerequisites: [],
         scope_files: ["a.ts"],
         depends_on: [],
         required_summaries: [],
@@ -38,4 +45,3 @@ describe("serialization", () => {
     expect(xml).toContain("analysis");
   });
 });
-

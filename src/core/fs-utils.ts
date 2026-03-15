@@ -33,14 +33,15 @@ export async function readTextIfExists(targetPath: string): Promise<string | und
 export async function loadRepoConfig(repoPath: string, overrides?: Partial<CodeExplorerConfig>): Promise<CodeExplorerConfig> {
   const configPath = path.join(repoPath, DEFAULT_CONFIG_FILE);
   const baseConfig = createDefaultConfig();
+  const explicitOverrides = compactConfigOverrides(overrides);
 
   if (!(await pathExists(configPath))) {
     return {
       ...baseConfig,
-      ...overrides,
-      include: overrides?.include ?? baseConfig.include,
-      exclude: overrides?.exclude ?? baseConfig.exclude,
-      languageAdapters: overrides?.languageAdapters ?? baseConfig.languageAdapters,
+      ...explicitOverrides,
+      include: explicitOverrides.include ?? baseConfig.include,
+      exclude: explicitOverrides.exclude ?? baseConfig.exclude,
+      languageAdapters: explicitOverrides.languageAdapters ?? baseConfig.languageAdapters,
     };
   }
 
@@ -50,7 +51,7 @@ export async function loadRepoConfig(repoPath: string, overrides?: Partial<CodeE
   return {
     ...baseConfig,
     ...parsed,
-    ...overrides,
+    ...explicitOverrides,
     include: parsed.include ?? baseConfig.include,
     exclude: parsed.exclude ?? baseConfig.exclude,
     languageAdapters: parsed.languageAdapters ?? baseConfig.languageAdapters,
@@ -61,6 +62,7 @@ export async function listRepoFiles(repoPath: string, config: CodeExplorerConfig
   const ig = ignore();
   ig.add(DEFAULT_EXCLUDES);
   ig.add(config.exclude);
+  ig.add(`${config.outputDir}/**`);
 
   const gitignorePath = path.join(repoPath, ".gitignore");
   const gitignoreContent = await readTextIfExists(gitignorePath);
@@ -94,4 +96,12 @@ export async function writeWorkspaceFile(targetPath: string, content: string): P
 export async function listImmediateChildren(targetPath: string): Promise<string[]> {
   const items = await readdir(targetPath);
   return items.sort((left, right) => left.localeCompare(right));
+}
+
+function compactConfigOverrides(overrides?: Partial<CodeExplorerConfig>): Partial<CodeExplorerConfig> {
+  if (!overrides) {
+    return {};
+  }
+
+  return Object.fromEntries(Object.entries(overrides).filter(([, value]) => value !== undefined)) as Partial<CodeExplorerConfig>;
 }

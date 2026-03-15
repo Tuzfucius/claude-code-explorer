@@ -19,7 +19,7 @@ export function createDefaultConfig(): CodeExplorerConfig {
     concurrency: DEFAULT_CONCURRENCY,
     languageAdapters: [...SUPPORTED_AST_LANGUAGES],
     outputDir: DEFAULT_OUTPUT_DIRNAME,
-    docLanguage: "zh-CN",
+    docLanguage: "auto",
     maxFilesPerTask: DEFAULT_MAX_FILES_PER_TASK,
   };
 }
@@ -33,4 +33,3 @@ export async function writeDefaultConfig(rootDir: string): Promise<string> {
 
   return configPath;
 }
-

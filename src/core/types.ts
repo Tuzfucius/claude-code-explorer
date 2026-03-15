@@ -2,6 +2,8 @@ export type RunnerMode = "auto" | "teams" | "sdk";
 export type PhaseStatus = "pending" | "running" | "completed" | "failed" | "skipped";
 export type WaveName = "WAVE_1" | "WAVE_2" | "WAVE_3";
 export type AgentRole = "orchestrator" | "data-agent" | "flow-agent" | "architect" | "writer";
+export type DocumentLanguage = "auto" | "zh-CN" | "en-US" | string;
+export type TeachingUnitKind = "core" | "supporting";
 
 export interface CodeExplorerConfig {
   include: string[];
@@ -10,7 +12,7 @@ export interface CodeExplorerConfig {
   concurrency: number;
   languageAdapters: string[];
   outputDir: string;
-  docLanguage: "zh-CN";
+  docLanguage: DocumentLanguage;
   maxFilesPerTask: number;
 }
 
@@ -60,6 +62,13 @@ export interface TaskPlan {
   wave: WaveName;
   title: string;
   goal: string;
+  teaching_unit: string;
+  teaching_unit_kind: TeachingUnitKind;
+  learning_order: number;
+  why_this_matters: string;
+  why_this_order: string;
+  key_questions: string[];
+  recommended_prerequisites: string[];
   scope_files: string[];
   depends_on: string[];
   required_summaries: string[];
@@ -76,6 +85,7 @@ export interface WavePlan {
 export interface TaskContext {
   repoPath: string;
   task: TaskPlan;
+  docLanguage: DocumentLanguage;
   fileContents: Array<{
     path: string;
     content: string;

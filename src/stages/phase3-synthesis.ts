@@ -32,11 +32,11 @@ export async function runPhase3(
     const summaries = await readSummaries(resolveArtifactPath(repoPath, "analysisDir", config.outputDir));
     await writeWorkspaceFile(
       resolveArtifactPath(repoPath, "highlights", config.outputDir),
-      `${buildHighlightsMarkdown(wavePlans, results, summaries)}\n`,
+      `${buildHighlightsMarkdown(wavePlans, results, summaries, config.docLanguage)}\n`,
     );
     await writeWorkspaceFile(
       resolveArtifactPath(repoPath, "architecture", config.outputDir),
-      `${buildArchitectureMarkdown(indexMap, wavePlans, summaries)}\n`,
+      `${buildArchitectureMarkdown(indexMap, wavePlans, summaries, config.docLanguage)}\n`,
     );
 
     await writeWorkspaceFile(

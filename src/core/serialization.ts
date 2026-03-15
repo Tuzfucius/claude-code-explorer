@@ -51,7 +51,14 @@ export function parseWavePlan(xmlContent: string): { wave: WaveName; tasks: Task
   return {
     wave: parsed.wave_plan.wave,
     tasks: normalizeArray(parsed.wave_plan.tasks).map((task) =>
-      normalizeArrayFields(task as Record<string, unknown>, ["scope_files", "depends_on", "required_summaries", "acceptance_checks"]),
+      normalizeArrayFields(task as Record<string, unknown>, [
+        "key_questions",
+        "recommended_prerequisites",
+        "scope_files",
+        "depends_on",
+        "required_summaries",
+        "acceptance_checks",
+      ]),
     ) as unknown as TaskPlan[],
   };
 }
