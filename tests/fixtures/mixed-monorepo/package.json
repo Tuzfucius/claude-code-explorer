@@ -1,0 +1,6 @@
+{
+  "name": "fixture-mixed-monorepo",
+  "private": true,
+  "workspaces": ["packages/*"]
+}
+

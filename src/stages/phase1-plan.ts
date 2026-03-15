@@ -28,7 +28,7 @@ export async function runPhase1(repoPath: string, indexMap: IndexMap): Promise<R
   await writeWorkspaceFile(path.join(outputRoot, PHASE_STATUS_FILES.phase1), `${serializePhaseState(runningState)}\n`);
 
   try {
-    const taskPlans = buildTaskPlans(indexMap.entries, config.maxFilesPerTask);
+    const taskPlans = buildTaskPlans(indexMap.entries, config.maxFilesPerTask, config.outputDir);
 
     await writeWorkspaceFile(path.join(outputRoot, ARTIFACT_FILES.wave1), `${serializeWavePlans("WAVE_1", taskPlans.WAVE_1)}\n`);
     await writeWorkspaceFile(path.join(outputRoot, ARTIFACT_FILES.wave2), `${serializeWavePlans("WAVE_2", taskPlans.WAVE_2)}\n`);

@@ -36,7 +36,11 @@ export function estimateLogicalLines(summary?: string): number {
   return summary.split(/\r?\n/).filter((line) => line.trim().length > 0).length;
 }
 
-export function buildTaskPlans(entries: FileIndexEntry[], maxFilesPerTask: number): Record<WaveName, TaskPlan[]> {
+export function buildTaskPlans(
+  entries: FileIndexEntry[],
+  maxFilesPerTask: number,
+  outputDirname = ".code-explorer",
+): Record<WaveName, TaskPlan[]> {
   const groupedByWave = {
     WAVE_1: [] as FileIndexEntry[],
     WAVE_2: [] as FileIndexEntry[],
@@ -48,13 +52,13 @@ export function buildTaskPlans(entries: FileIndexEntry[], maxFilesPerTask: numbe
   }
 
   return {
-    WAVE_1: chunkWave("WAVE_1", groupedByWave.WAVE_1, maxFilesPerTask),
-    WAVE_2: chunkWave("WAVE_2", groupedByWave.WAVE_2, maxFilesPerTask),
-    WAVE_3: chunkWave("WAVE_3", groupedByWave.WAVE_3, maxFilesPerTask),
+    WAVE_1: chunkWave("WAVE_1", groupedByWave.WAVE_1, maxFilesPerTask, outputDirname),
+    WAVE_2: chunkWave("WAVE_2", groupedByWave.WAVE_2, maxFilesPerTask, outputDirname),
+    WAVE_3: chunkWave("WAVE_3", groupedByWave.WAVE_3, maxFilesPerTask, outputDirname),
   };
 }
 
-function chunkWave(wave: WaveName, entries: FileIndexEntry[], maxFilesPerTask: number): TaskPlan[] {
+function chunkWave(wave: WaveName, entries: FileIndexEntry[], maxFilesPerTask: number, outputDirname: string): TaskPlan[] {
   const sorted = [...entries].sort((left, right) => left.path.localeCompare(right.path));
   const tasks: TaskPlan[] = [];
   let chunk: FileIndexEntry[] = [];
@@ -67,7 +71,7 @@ function chunkWave(wave: WaveName, entries: FileIndexEntry[], maxFilesPerTask: n
     const pathChanged = chunk.length > 0 && path.dirname(chunk[0].path) !== path.dirname(entry.path);
 
     if (chunk.length > 0 && (wouldOverflowFiles || wouldOverflowLines || pathChanged)) {
-      tasks.push(createTaskFromChunk(wave, tasks.length + 1, chunk));
+      tasks.push(createTaskFromChunk(wave, tasks.length + 1, chunk, outputDirname));
       chunk = [];
       estimatedLines = 0;
     }
@@ -77,13 +81,13 @@ function chunkWave(wave: WaveName, entries: FileIndexEntry[], maxFilesPerTask: n
   }
 
   if (chunk.length > 0) {
-    tasks.push(createTaskFromChunk(wave, tasks.length + 1, chunk));
+    tasks.push(createTaskFromChunk(wave, tasks.length + 1, chunk, outputDirname));
   }
 
   return tasks;
 }
 
-function createTaskFromChunk(wave: WaveName, sequence: number, chunk: FileIndexEntry[]): TaskPlan {
+function createTaskFromChunk(wave: WaveName, sequence: number, chunk: FileIndexEntry[], outputDirname: string): TaskPlan {
   const taskId = `${wave.toLowerCase()}_${String(sequence).padStart(2, "0")}`;
   const title = `${wave} ${path.dirname(chunk[0].path) === "." ? "root" : path.dirname(chunk[0].path)} 模块分析`;
   const dependsOn = wave === "WAVE_1" ? [] : wave === "WAVE_2" ? ["WAVE_1"] : ["WAVE_1", "WAVE_2"];
@@ -97,7 +101,7 @@ function createTaskFromChunk(wave: WaveName, sequence: number, chunk: FileIndexE
     depends_on: dependsOn,
     required_summaries: wave === "WAVE_1" ? [] : [`${wave === "WAVE_2" ? "WAVE_1" : "WAVE_2"}:*`],
     agent_role: wave === "WAVE_2" ? "flow-agent" : "data-agent",
-    output_path: `.code-explorer/planning/analysis/${taskId}_SUMMARY.md`,
+    output_path: `${outputDirname}/planning/analysis/${taskId}_SUMMARY.md`,
     acceptance_checks: [
       "说明模块职责与边界",
       "列出关键类型、函数和调用链",
@@ -117,4 +121,3 @@ function createGoal(wave: WaveName): string {
 
   return "总结入口层、交互层、集成点与亮点候选。";
 }
-

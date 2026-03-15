@@ -2,8 +2,9 @@ import { Command } from "commander";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-import { createDefaultConfig, writeDefaultConfig } from "../core/config.js";
+import { createDefaultConfig } from "../core/config.js";
 import { readTextIfExists } from "../core/fs-utils.js";
+import { initializeWorkspace } from "../core/init.js";
 import { resolveOutputRoot, resolveStatusPath } from "../core/paths.js";
 import { parsePhaseState } from "../core/serialization.js";
 import { runPhase0 } from "../stages/phase0-map.js";
@@ -23,8 +24,8 @@ export function createProgram(): Command {
     .description("初始化默认配置")
     .option("--cwd <path>", "写入配置的目录", process.cwd())
     .action(async (options: { cwd: string }) => {
-      const configPath = await writeDefaultConfig(options.cwd);
-      process.stdout.write(`已生成配置: ${configPath}\n`);
+      const created = await initializeWorkspace(path.resolve(options.cwd));
+      process.stdout.write(`已生成 ${created.length} 个初始化文件\n`);
     });
 
   program

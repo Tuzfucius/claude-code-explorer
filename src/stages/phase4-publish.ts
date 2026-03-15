@@ -95,7 +95,8 @@ async function publishModuleSummaries(
   repoPath: string,
   docsRoot: string,
 ): Promise<Array<{ fileName: string; title: string }>> {
-  const analysisDir = resolveArtifactPath(repoPath, "analysisDir");
+  const config = await loadRepoConfig(repoPath);
+  const analysisDir = resolveArtifactPath(repoPath, "analysisDir", config.outputDir);
   const fs = await import("node:fs/promises");
   const entries = await fs.readdir(analysisDir, { withFileTypes: true }).catch(() => []);
   const summaries = entries.filter((entry) => entry.isFile() && entry.name.endsWith("_SUMMARY.md"));
