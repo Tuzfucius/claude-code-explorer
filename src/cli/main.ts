@@ -9,6 +9,9 @@ import { parsePhaseState } from "../core/serialization.js";
 import { runPhase0 } from "../stages/phase0-map.js";
 import { runPhase1 } from "../stages/phase1-plan.js";
 import { runPhase2 } from "../stages/phase2-execute.js";
+import { runPhase3 } from "../stages/phase3-synthesis.js";
+import { runPhase4 } from "../stages/phase4-publish.js";
+import { verifyDocs } from "../reporting/verify.js";
 
 export function createProgram(): Command {
   const program = new Command();
@@ -35,8 +38,12 @@ export function createProgram(): Command {
       const absoluteRepoPath = path.resolve(repoPath);
       const indexMap = await runPhase0(absoluteRepoPath);
       const wavePlans = await runPhase1(absoluteRepoPath, indexMap);
-      await runPhase2(absoluteRepoPath, wavePlans);
-      process.stdout.write(`已完成阶段 0-2，产物目录: ${resolveOutputRoot(absoluteRepoPath)}\n`);
+      const results = await runPhase2(absoluteRepoPath, wavePlans);
+      await runPhase3(absoluteRepoPath, indexMap, wavePlans, results);
+      const verifyResult = await runPhase4(absoluteRepoPath, indexMap, wavePlans);
+      process.stdout.write(
+        `已完成阶段 0-4，产物目录: ${resolveOutputRoot(absoluteRepoPath)}，校验${verifyResult.valid ? "通过" : "失败"}\n`,
+      );
     });
 
   program
@@ -63,7 +70,9 @@ export function createProgram(): Command {
     .description("校验文档产物")
     .argument("<repoPath>", "目标仓库路径")
     .action(async (repoPath: string) => {
-      process.stdout.write(`校验入口已就绪: ${repoPath}\n`);
+      const absoluteRepoPath = path.resolve(repoPath);
+      const result = await verifyDocs(path.join(resolveOutputRoot(absoluteRepoPath), "docs"));
+      process.stdout.write(`校验${result.valid ? "通过" : "失败"}\n`);
     });
 
   program.addHelpText("after", `\n默认配置示例:\n${JSON.stringify(createDefaultConfig(), null, 2)}`);

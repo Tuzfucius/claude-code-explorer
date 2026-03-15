@@ -25,6 +25,7 @@ export const ARTIFACT_FILES = {
   architecture: "docs/SYSTEM_ARCHITECTURE.md",
   learningPath: "docs/LEARNING_PATH.md",
   glossary: "docs/GLOSSARY.md",
+  verifyReport: "docs/VERIFY_REPORT.md",
 } as const;
 
 export const DEFAULT_EXCLUDES = [
@@ -52,4 +53,3 @@ export const DEFAULT_EXCLUDES = [
 ] as const;
 
 export const SUPPORTED_AST_LANGUAGES = ["typescript", "javascript", "python", "java", "go", "rust"] as const;
-
