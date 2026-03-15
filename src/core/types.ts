@@ -73,3 +73,24 @@ export interface WavePlan {
   tasks: TaskPlan[];
 }
 
+export interface TaskContext {
+  repoPath: string;
+  task: TaskPlan;
+  fileContents: Array<{
+    path: string;
+    content: string;
+  }>;
+  dependencySummaries: Array<{
+    path: string;
+    content: string;
+  }>;
+}
+
+export interface TaskExecutionResult {
+  taskId: string;
+  status: "completed" | "failed";
+  outputPath: string;
+  attempts: number;
+  runner: RunnerMode | "heuristic";
+  error?: string;
+}

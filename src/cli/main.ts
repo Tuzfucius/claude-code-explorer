@@ -8,6 +8,7 @@ import { resolveOutputRoot, resolveStatusPath } from "../core/paths.js";
 import { parsePhaseState } from "../core/serialization.js";
 import { runPhase0 } from "../stages/phase0-map.js";
 import { runPhase1 } from "../stages/phase1-plan.js";
+import { runPhase2 } from "../stages/phase2-execute.js";
 
 export function createProgram(): Command {
   const program = new Command();
@@ -33,8 +34,9 @@ export function createProgram(): Command {
     .action(async (repoPath: string) => {
       const absoluteRepoPath = path.resolve(repoPath);
       const indexMap = await runPhase0(absoluteRepoPath);
-      await runPhase1(absoluteRepoPath, indexMap);
-      process.stdout.write(`已完成阶段 0-1，产物目录: ${resolveOutputRoot(absoluteRepoPath)}\n`);
+      const wavePlans = await runPhase1(absoluteRepoPath, indexMap);
+      await runPhase2(absoluteRepoPath, wavePlans);
+      process.stdout.write(`已完成阶段 0-2，产物目录: ${resolveOutputRoot(absoluteRepoPath)}\n`);
     });
 
   program
