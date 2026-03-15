@@ -1,6 +1,13 @@
 import { Command } from "commander";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
 
 import { createDefaultConfig, writeDefaultConfig } from "../core/config.js";
+import { readTextIfExists } from "../core/fs-utils.js";
+import { resolveOutputRoot, resolveStatusPath } from "../core/paths.js";
+import { parsePhaseState } from "../core/serialization.js";
+import { runPhase0 } from "../stages/phase0-map.js";
+import { runPhase1 } from "../stages/phase1-plan.js";
 
 export function createProgram(): Command {
   const program = new Command();
@@ -24,7 +31,10 @@ export function createProgram(): Command {
     .option("--concurrency <number>", "并发度")
     .option("--runner <mode>", "执行器模式：teams|sdk|auto", "auto")
     .action(async (repoPath: string) => {
-      process.stdout.write(`工作流入口已就绪，待后续阶段实现: ${repoPath}\n`);
+      const absoluteRepoPath = path.resolve(repoPath);
+      const indexMap = await runPhase0(absoluteRepoPath);
+      await runPhase1(absoluteRepoPath, indexMap);
+      process.stdout.write(`已完成阶段 0-1，产物目录: ${resolveOutputRoot(absoluteRepoPath)}\n`);
     });
 
   program
@@ -32,7 +42,18 @@ export function createProgram(): Command {
     .description("查看状态文件摘要")
     .argument("<repoPath>", "目标仓库路径")
     .action(async (repoPath: string) => {
-      process.stdout.write(`状态查询入口已就绪: ${repoPath}\n`);
+      const absoluteRepoPath = path.resolve(repoPath);
+      const targets = ["phase0", "phase1", "phase2", "phase3", "phase4"] as const;
+      for (const key of targets) {
+        const content = await readTextIfExists(resolveStatusPath(absoluteRepoPath, key));
+        if (!content) {
+          process.stdout.write(`${key}: 未生成\n`);
+          continue;
+        }
+
+        const state = parsePhaseState(content);
+        process.stdout.write(`${key}: ${state.status}\n`);
+      }
     });
 
   program
@@ -52,7 +73,9 @@ export async function runCli(argv = process.argv): Promise<void> {
   await createProgram().parseAsync(argv);
 }
 
-if (import.meta.url === `file://${process.argv[1]?.replace(/\\/g, "/")}`) {
+const entryUrl = process.argv[1] ? pathToFileURL(process.argv[1]).href : undefined;
+
+if (entryUrl === import.meta.url) {
   runCli().catch((error: unknown) => {
     const message = error instanceof Error ? error.stack ?? error.message : String(error);
     process.stderr.write(`${message}\n`);
