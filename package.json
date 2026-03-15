@@ -4,7 +4,7 @@
   "description": "面向 Claude Code 的代码仓库学习工作流工具",
   "type": "module",
   "bin": {
-    "code-explorer": "./dist/cli/main.js"
+    "code-explorer": "./bin/code-explorer.mjs"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
