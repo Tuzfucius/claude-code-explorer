@@ -30,12 +30,18 @@ export async function readTextIfExists(targetPath: string): Promise<string | und
   return readFile(targetPath, "utf8");
 }
 
-export async function loadRepoConfig(repoPath: string): Promise<CodeExplorerConfig> {
+export async function loadRepoConfig(repoPath: string, overrides?: Partial<CodeExplorerConfig>): Promise<CodeExplorerConfig> {
   const configPath = path.join(repoPath, DEFAULT_CONFIG_FILE);
   const baseConfig = createDefaultConfig();
 
   if (!(await pathExists(configPath))) {
-    return baseConfig;
+    return {
+      ...baseConfig,
+      ...overrides,
+      include: overrides?.include ?? baseConfig.include,
+      exclude: overrides?.exclude ?? baseConfig.exclude,
+      languageAdapters: overrides?.languageAdapters ?? baseConfig.languageAdapters,
+    };
   }
 
   const raw = await readFile(configPath, "utf8");
@@ -44,6 +50,7 @@ export async function loadRepoConfig(repoPath: string): Promise<CodeExplorerConf
   return {
     ...baseConfig,
     ...parsed,
+    ...overrides,
     include: parsed.include ?? baseConfig.include,
     exclude: parsed.exclude ?? baseConfig.exclude,
     languageAdapters: parsed.languageAdapters ?? baseConfig.languageAdapters,
@@ -88,4 +95,3 @@ export async function listImmediateChildren(targetPath: string): Promise<string[
   const items = await readdir(targetPath);
   return items.sort((left, right) => left.localeCompare(right));
 }
-

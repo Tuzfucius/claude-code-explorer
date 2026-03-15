@@ -6,14 +6,18 @@ import { ARTIFACT_FILES, PHASE_STATUS_FILES } from "../core/constants.js";
 import { loadRepoConfig, readWorkspaceFile, writeWorkspaceFile } from "../core/fs-utils.js";
 import { resolveArtifactPath, resolveOutputRoot } from "../core/paths.js";
 import { serializePhaseState } from "../core/serialization.js";
-import type { PhaseState, TaskContext, TaskExecutionResult, TaskPlan, WaveName } from "../core/types.js";
+import type { CodeExplorerConfig, PhaseState, TaskContext, TaskExecutionResult, TaskPlan, TaskSummaryResult, WaveName } from "../core/types.js";
 import { buildTaskPrompts } from "../prompts/task-prompts.js";
 import { resolveRunner } from "../runners/index.js";
 
 const WAVE_SEQUENCE: WaveName[] = ["WAVE_1", "WAVE_2", "WAVE_3"];
 
-export async function runPhase2(repoPath: string, wavePlans: Record<WaveName, TaskPlan[]>): Promise<TaskExecutionResult[]> {
-  const config = await loadRepoConfig(repoPath);
+export async function runPhase2(
+  repoPath: string,
+  wavePlans: Record<WaveName, TaskPlan[]>,
+  configOverrides?: Partial<CodeExplorerConfig>,
+): Promise<TaskExecutionResult[]> {
+  const config = await loadRepoConfig(repoPath, configOverrides);
   const outputRoot = resolveOutputRoot(repoPath, config.outputDir);
   const runner = await resolveRunner(config.runnerMode);
 
@@ -39,10 +43,13 @@ export async function runPhase2(repoPath: string, wavePlans: Record<WaveName, Ta
   await writeWorkspaceFile(path.join(outputRoot, PHASE_STATUS_FILES.phase2), `${serializePhaseState(runningState)}\n`);
 
   try {
-    const limit = pLimit(config.concurrency);
+    const effectiveConcurrency = runner?.mode === "teams" ? 1 : config.concurrency;
+    const limit = pLimit(effectiveConcurrency);
     for (const wave of WAVE_SEQUENCE) {
       const tasks = wavePlans[wave];
-      const waveResults = await Promise.all(tasks.map((task) => limit(() => executeTask(repoPath, outputRoot, task, runner?.mode))));
+      const waveResults = await Promise.all(
+        tasks.map((task) => limit(() => executeTask(repoPath, outputRoot, config.outputDir, task, runner?.mode))),
+      );
       results.push(...waveResults);
       const failures = waveResults.filter((item) => item.status === "failed");
       if (failures.length > 0) {
@@ -77,26 +84,33 @@ export async function runPhase2(repoPath: string, wavePlans: Record<WaveName, Ta
 async function executeTask(
   repoPath: string,
   outputRoot: string,
+  outputDirname: string,
   task: TaskPlan,
   preferredRunner: "teams" | "sdk" | undefined,
 ): Promise<TaskExecutionResult> {
   const outputPath = path.join(repoPath, task.output_path);
+  const logPath = path.join(repoPath, outputDirname, "planning", "analysis", "TASK_RUN_LOG.md");
   let attempts = 0;
   let lastError: string | undefined;
+  let actualRunner: "teams" | "sdk" | "heuristic" = preferredRunner ?? "heuristic";
+  let lastNote: string | undefined;
 
   while (attempts < 2) {
     attempts += 1;
 
     try {
       const context = await buildTaskContext(repoPath, task);
-      const content = await generateTaskSummary(context, preferredRunner);
-      await writeWorkspaceFile(outputPath, content);
+      const summary = await generateTaskSummary(context, preferredRunner);
+      actualRunner = summary.runner;
+      lastNote = summary.note;
+      await writeWorkspaceFile(outputPath, summary.content);
+      await appendTaskLog(logPath, task, attempts, preferredRunner, actualRunner, lastNote);
       return {
         taskId: task.task_id,
         status: "completed",
         outputPath: path.relative(outputRoot, outputPath).replace(/\\/g, "/"),
         attempts,
-        runner: preferredRunner ?? "heuristic",
+        runner: actualRunner,
       };
     } catch (error) {
       lastError = error instanceof Error ? error.message : String(error);
@@ -105,13 +119,14 @@ async function executeTask(
 
   const failedContent = renderFailedSummary(task, lastError ?? "未知错误");
   await writeWorkspaceFile(outputPath, failedContent);
+  await appendTaskLog(logPath, task, attempts, preferredRunner, "heuristic", lastError);
 
   return {
     taskId: task.task_id,
     status: "failed",
     outputPath: path.relative(outputRoot, outputPath).replace(/\\/g, "/"),
     attempts,
-    runner: preferredRunner ?? "heuristic",
+    runner: "heuristic",
     error: lastError,
   };
 }
@@ -134,7 +149,10 @@ async function buildTaskContext(repoPath: string, task: TaskPlan): Promise<TaskC
   };
 }
 
-async function generateTaskSummary(context: TaskContext, preferredRunner: "teams" | "sdk" | undefined): Promise<string> {
+async function generateTaskSummary(
+  context: TaskContext,
+  preferredRunner: "teams" | "sdk" | undefined,
+): Promise<TaskSummaryResult> {
   if (preferredRunner) {
     const runner = await resolveRunner(preferredRunner);
     if (runner) {
@@ -142,15 +160,26 @@ async function generateTaskSummary(context: TaskContext, preferredRunner: "teams
       try {
         const result = await runner.run(prompts, context);
         if (result.trim()) {
-          return result.endsWith("\n") ? result : `${result}\n`;
+          return {
+            content: result.endsWith("\n") ? result : `${result}\n`,
+            runner: preferredRunner,
+          };
         }
       } catch {
-        return renderHeuristicSummary(context);
+        return {
+          content: renderHeuristicSummary(context),
+          runner: "heuristic",
+          note: `Runner ${preferredRunner} 失败，已回退到启发式摘要。`,
+        };
       }
     }
   }
 
-  return renderHeuristicSummary(context);
+  return {
+    content: renderHeuristicSummary(context),
+    runner: "heuristic",
+    note: preferredRunner ? `Runner ${preferredRunner} 不可用，已回退到启发式摘要。` : "未配置外部 Runner，使用启发式摘要。",
+  };
 }
 
 async function readDependencySummaries(repoPath: string, wave: WaveName): Promise<Array<{ path: string; content: string }>> {
@@ -234,4 +263,25 @@ function trimForPrompt(content: string): string {
   }
 
   return `${content.slice(0, maxLength)}\n\n/* truncated */`;
+}
+
+async function appendTaskLog(
+  logPath: string,
+  task: TaskPlan,
+  attempts: number,
+  requestedRunner: "teams" | "sdk" | undefined,
+  actualRunner: "teams" | "sdk" | "heuristic",
+  note?: string,
+): Promise<void> {
+  const existing = (await import("node:fs/promises")).readFile(logPath, "utf8").catch(() => "");
+  const prefix = (await existing).trim();
+  const content = [
+    prefix,
+    `- ${new Date().toISOString()} task=${task.task_id} requested=${requestedRunner ?? "none"} actual=${actualRunner} attempts=${attempts}${
+      note ? ` note=${note}` : ""
+    }`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+  await writeWorkspaceFile(logPath, `${content}\n`);
 }

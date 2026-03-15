@@ -5,12 +5,12 @@ import { ensureDir, listRepoFiles, loadRepoConfig, writeWorkspaceFile } from "..
 import { detectLanguage, isAstCandidate, isManifestFile } from "../core/language.js";
 import { resolveOutputRoot } from "../core/paths.js";
 import { serializeIndexMap, serializePhaseState } from "../core/serialization.js";
-import type { IndexMap, PhaseState } from "../core/types.js";
+import type { CodeExplorerConfig, IndexMap, PhaseState } from "../core/types.js";
 import { summarizeManifest, parseHeuristically } from "../parsers/heuristic.js";
 import { parseWithTreeSitter } from "../parsers/tree-sitter.js";
 
-export async function runPhase0(repoPath: string): Promise<IndexMap> {
-  const config = await loadRepoConfig(repoPath);
+export async function runPhase0(repoPath: string, configOverrides?: Partial<CodeExplorerConfig>): Promise<IndexMap> {
+  const config = await loadRepoConfig(repoPath, configOverrides);
   const outputRoot = resolveOutputRoot(repoPath, config.outputDir);
   await ensureDir(outputRoot);
 
@@ -77,4 +77,3 @@ export async function runPhase0(repoPath: string): Promise<IndexMap> {
     throw error;
   }
 }
-

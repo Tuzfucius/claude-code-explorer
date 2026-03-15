@@ -9,6 +9,7 @@ import { readTextIfExists } from "../core/fs-utils.js";
 import { initializeWorkspace } from "../core/init.js";
 import { resolveOutputRoot, resolveStatusPath } from "../core/paths.js";
 import { parsePhaseState } from "../core/serialization.js";
+import type { CodeExplorerConfig } from "../core/types.js";
 import { runPhase0 } from "../stages/phase0-map.js";
 import { runPhase1 } from "../stages/phase1-plan.js";
 import { runPhase2 } from "../stages/phase2-execute.js";
@@ -37,13 +38,17 @@ export function createProgram(): Command {
     .option("--resume", "从已有状态继续")
     .option("--concurrency <number>", "并发度")
     .option("--runner <mode>", "执行器模式：teams|sdk|auto", "auto")
-    .action(async (repoPath: string) => {
+    .action(async (repoPath: string, options: { concurrency?: string; runner?: CodeExplorerConfig["runnerMode"] }) => {
       const absoluteRepoPath = path.resolve(repoPath);
-      const indexMap = await runPhase0(absoluteRepoPath);
-      const wavePlans = await runPhase1(absoluteRepoPath, indexMap);
-      const results = await runPhase2(absoluteRepoPath, wavePlans);
-      await runPhase3(absoluteRepoPath, indexMap, wavePlans, results);
-      const verifyResult = await runPhase4(absoluteRepoPath, indexMap, wavePlans);
+      const configOverrides: Partial<CodeExplorerConfig> = {
+        runnerMode: options.runner ?? "auto",
+        concurrency: options.concurrency ? Number(options.concurrency) : undefined,
+      };
+      const indexMap = await runPhase0(absoluteRepoPath, configOverrides);
+      const wavePlans = await runPhase1(absoluteRepoPath, indexMap, configOverrides);
+      const results = await runPhase2(absoluteRepoPath, wavePlans, configOverrides);
+      await runPhase3(absoluteRepoPath, indexMap, wavePlans, results, configOverrides);
+      const verifyResult = await runPhase4(absoluteRepoPath, indexMap, wavePlans, configOverrides);
       process.stdout.write(
         `已完成阶段 0-4，产物目录: ${resolveOutputRoot(absoluteRepoPath)}，校验${verifyResult.valid ? "通过" : "失败"}\n`,
       );

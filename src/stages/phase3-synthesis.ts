@@ -4,7 +4,7 @@ import { ARTIFACT_FILES, PHASE_STATUS_FILES } from "../core/constants.js";
 import { loadRepoConfig, readTextIfExists, writeWorkspaceFile } from "../core/fs-utils.js";
 import { resolveArtifactPath, resolveOutputRoot } from "../core/paths.js";
 import { serializePhaseState } from "../core/serialization.js";
-import type { IndexMap, PhaseState, TaskExecutionResult, TaskPlan, WaveName } from "../core/types.js";
+import type { CodeExplorerConfig, IndexMap, PhaseState, TaskExecutionResult, TaskPlan, WaveName } from "../core/types.js";
 import { buildArchitectureMarkdown, buildHighlightsMarkdown } from "../reporting/docs.js";
 
 export async function runPhase3(
@@ -12,8 +12,9 @@ export async function runPhase3(
   indexMap: IndexMap,
   wavePlans: Record<WaveName, TaskPlan[]>,
   results: TaskExecutionResult[],
+  configOverrides?: Partial<CodeExplorerConfig>,
 ): Promise<void> {
-  const config = await loadRepoConfig(repoPath);
+  const config = await loadRepoConfig(repoPath, configOverrides);
   const outputRoot = resolveOutputRoot(repoPath, config.outputDir);
   const runningState: PhaseState = {
     phase: "phase_3_synthesis",
@@ -73,4 +74,3 @@ async function readSummaries(analysisDir: string): Promise<Array<{ fileName: str
 
   return summaries.sort((left, right) => left.fileName.localeCompare(right.fileName));
 }
-

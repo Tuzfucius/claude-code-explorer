@@ -20,7 +20,7 @@ export class TeamsRunner implements AgentRunner {
       "claude",
       ["-p", prompt, "--append-system-prompt", request.systemPrompt],
       context.repoPath,
-      20000,
+      180000,
     );
     return stdout.trim();
   }

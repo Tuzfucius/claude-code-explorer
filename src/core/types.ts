@@ -94,3 +94,9 @@ export interface TaskExecutionResult {
   runner: RunnerMode | "heuristic";
   error?: string;
 }
+
+export interface TaskSummaryResult {
+  content: string;
+  runner: "teams" | "sdk" | "heuristic";
+  note?: string;
+}

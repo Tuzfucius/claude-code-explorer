@@ -4,7 +4,7 @@ import { ARTIFACT_FILES, PHASE_STATUS_FILES } from "../core/constants.js";
 import { loadRepoConfig, readTextIfExists, writeWorkspaceFile } from "../core/fs-utils.js";
 import { resolveArtifactPath, resolveOutputRoot } from "../core/paths.js";
 import { serializePhaseState } from "../core/serialization.js";
-import type { IndexMap, PhaseState, TaskPlan, WaveName } from "../core/types.js";
+import type { CodeExplorerConfig, IndexMap, PhaseState, TaskPlan, WaveName } from "../core/types.js";
 import {
   buildDocsIndex,
   buildDocsReadme,
@@ -18,8 +18,9 @@ export async function runPhase4(
   repoPath: string,
   indexMap: IndexMap,
   wavePlans: Record<WaveName, TaskPlan[]>,
+  configOverrides?: Partial<CodeExplorerConfig>,
 ): Promise<VerifyResult> {
-  const config = await loadRepoConfig(repoPath);
+  const config = await loadRepoConfig(repoPath, configOverrides);
   const outputRoot = resolveOutputRoot(repoPath, config.outputDir);
   const docsRoot = resolveArtifactPath(repoPath, "docsDir", config.outputDir);
   const runningState: PhaseState = {
@@ -94,8 +95,9 @@ export async function runPhase4(
 async function publishModuleSummaries(
   repoPath: string,
   docsRoot: string,
+  configOverrides?: Partial<CodeExplorerConfig>,
 ): Promise<Array<{ fileName: string; title: string }>> {
-  const config = await loadRepoConfig(repoPath);
+  const config = await loadRepoConfig(repoPath, configOverrides);
   const analysisDir = resolveArtifactPath(repoPath, "analysisDir", config.outputDir);
   const fs = await import("node:fs/promises");
   const entries = await fs.readdir(analysisDir, { withFileTypes: true }).catch(() => []);

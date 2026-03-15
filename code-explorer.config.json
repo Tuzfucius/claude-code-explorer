@@ -1,0 +1,41 @@
+{
+  "include": [
+    "**/*"
+  ],
+  "exclude": [
+    ".git/**",
+    "node_modules/**",
+    "dist/**",
+    "build/**",
+    "coverage/**",
+    ".next/**",
+    ".turbo/**",
+    "*.min.js",
+    "*.lock",
+    "*.png",
+    "*.jpg",
+    "*.jpeg",
+    "*.gif",
+    "*.mp4",
+    "*.zip",
+    "*.tar",
+    "*.gz",
+    "*.exe",
+    "*.dll",
+    "*.so",
+    "*.dylib"
+  ],
+  "runnerMode": "auto",
+  "concurrency": 4,
+  "languageAdapters": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "go",
+    "rust"
+  ],
+  "outputDir": ".code-explorer",
+  "docLanguage": "zh-CN",
+  "maxFilesPerTask": 10
+}

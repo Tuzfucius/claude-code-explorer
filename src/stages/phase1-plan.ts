@@ -4,11 +4,15 @@ import { ARTIFACT_FILES, PHASE_STATUS_FILES } from "../core/constants.js";
 import { buildTaskPlans } from "../core/plans.js";
 import { resolveOutputRoot } from "../core/paths.js";
 import { serializePhaseState, serializeWavePlans } from "../core/serialization.js";
-import type { IndexMap, PhaseState, TaskPlan, WaveName } from "../core/types.js";
+import type { CodeExplorerConfig, IndexMap, PhaseState, TaskPlan, WaveName } from "../core/types.js";
 import { loadRepoConfig, writeWorkspaceFile } from "../core/fs-utils.js";
 
-export async function runPhase1(repoPath: string, indexMap: IndexMap): Promise<Record<WaveName, TaskPlan[]>> {
-  const config = await loadRepoConfig(repoPath);
+export async function runPhase1(
+  repoPath: string,
+  indexMap: IndexMap,
+  configOverrides?: Partial<CodeExplorerConfig>,
+): Promise<Record<WaveName, TaskPlan[]>> {
+  const config = await loadRepoConfig(repoPath, configOverrides);
   const outputRoot = resolveOutputRoot(repoPath, config.outputDir);
 
   const runningState: PhaseState = {
