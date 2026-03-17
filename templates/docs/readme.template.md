@@ -2,11 +2,11 @@
 
 {{lead}}
 
-## 你将学到什么
+## 项目目标
 
 {{what_you_will_learn}}
 
-## 建议先读什么
+## 最先阅读
 
 {{first_reads}}
 

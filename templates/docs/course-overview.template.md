@@ -6,24 +6,24 @@
 
 ### 第一阶段：{{stage_1_title}}
 
-- 课程格言：{{stage_1_tagline}}
-- 这一阶段先建立的心智模型：{{stage_1_model}}
+- 当前聚焦：{{stage_1_tagline}}
+- 理解框架：{{stage_1_model}}
 - 推荐阅读：
   - {{stage_1_read_1}}
   - {{stage_1_read_2}}
 
 ### 第二阶段：{{stage_2_title}}
 
-- 课程格言：{{stage_2_tagline}}
-- 这一阶段先建立的心智模型：{{stage_2_model}}
+- 当前聚焦：{{stage_2_tagline}}
+- 理解框架：{{stage_2_model}}
 - 推荐阅读：
   - {{stage_2_read_1}}
   - {{stage_2_read_2}}
 
 ### 第三阶段：{{stage_3_title}}
 
-- 课程格言：{{stage_3_tagline}}
-- 这一阶段先建立的心智模型：{{stage_3_model}}
+- 当前聚焦：{{stage_3_tagline}}
+- 理解框架：{{stage_3_model}}
 - 推荐阅读：
   - {{stage_3_read_1}}
   - {{stage_3_read_2}}

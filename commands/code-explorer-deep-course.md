@@ -33,7 +33,8 @@ argument-hint: [repoPath=.]
 
 补充要求：
 
-- 最终 docs 必须包含 `COURSE_OVERVIEW.md`，用于说明学习阶段、课程格言和心智模型
+- 最终 docs 必须包含 `COURSE_OVERVIEW.md`，用于说明学习阶段、理解框架和当前聚焦
+- 只有在仓库复杂度足够高时才使用完整深度模式；简单仓库应提示用户改用 quick-tour 或紧凑模式
 - 所有长文档都要有目录
 - `INDEX.md` 必须成为整个 docs 的总跳转中心
 - 每篇文档末尾都要加返回总索引链接

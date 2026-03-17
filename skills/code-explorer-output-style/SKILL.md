@@ -40,7 +40,7 @@ description: Generate teaching-oriented repository learning documents. Use this 
 ## 必须做到
 
 - 先讲问题，再讲结构，再讲流程，再讲设计原因
-- 在正文开头先建立心智模型，再进入源码细节
+- 开头只允许用 1 到 2 句交代理解框架，不能扩写成独立废话章节
 - 每篇核心文档优先讲清一个关键机制，而不是把多个主题混成一篇
 - 每个重要判断都要给出源码证据
 - 在关键节点直接插入源码代码块，并解释应关注什么
@@ -59,6 +59,7 @@ description: Generate teaching-oriented repository learning documents. Use this 
 - 让索引变成目录转录
 - 用空泛结论代替对代码的具体解释
 - 只贴代码块而不解释代码为什么重要
+- 写出“为什么理解 X 很重要”这类没有源码支撑的教学口号
 
 ## 代码块规则
 
@@ -115,8 +116,7 @@ description: Generate teaching-oriented repository learning documents. Use this 
 
 ## 模块文档推荐结构
 
-- 课程阶段与课程格言
-- 先建立一个心智模型
+- 标题下方仅保留简短的阶段/聚焦提示
 - 这个模块解决的问题
 - 阅读前你需要知道什么
 - 核心对象与职责

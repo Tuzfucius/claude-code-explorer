@@ -19,7 +19,8 @@ argument-hint: [repoPath=.]
    - 一个 `scout`
    - 一个 `architect`
    - 一个 `writer`
-4. 输出最少包含：
+4. 对简单仓库禁止升级成深度模式；最多生成 4 到 6 份核心文档
+5. 输出最少包含：
    - `.code-explorer/docs/README.md`
    - `.code-explorer/docs/COURSE_OVERVIEW.md`
    - `.code-explorer/docs/START_HERE.md`

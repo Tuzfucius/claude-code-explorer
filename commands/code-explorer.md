@@ -23,6 +23,24 @@ argument-hint: [repoPath=.]
 
 目标仓库默认是当前目录；如果用户传入路径，则使用传入路径。
 
+## 复杂度分流
+
+开始前先快速判断仓库复杂度：
+
+- 简单仓库：代码文件不多、单入口、单服务、目录层次浅
+- 中等仓库：有多个核心目录或明显分层，但主链路仍然集中
+- 复杂仓库：多包/多服务/多入口，或存在明显的异步协作与扩展层
+
+如果是简单仓库，必须启用紧凑模式：
+
+- 阶段 1 只启动 1 个 `scout`
+- 阶段 2 总任务数控制在 2 到 4 个
+- 阶段 4 只生成最必要文档：`README.md`、`START_HERE.md`、`INDEX.md`、`SYSTEM_ARCHITECTURE.md`、`HIGHLIGHTS.md`、`VERIFY_REPORT.md`
+- 只有在确有价值时才补 `CORE_CONCEPTS.md`、学习路径和 `COURSE_OVERVIEW.md`
+- 目标是在 10 分钟左右给出第一版，而不是机械跑满所有材料
+
+如果是中等仓库，保持标准模式；如果是复杂仓库，再展开完整模式。
+
 ## 阶段 0：映射与索引
 
 1. 确保存在这些目录：
@@ -51,13 +69,15 @@ argument-hint: [repoPath=.]
    - 项目目标与入口
    - 主链路与架构层次
    - 项目特色与值得学习的设计
+   - 简单仓库降为 1 个 `scout`
 3. 汇总为：
    - `.code-explorer/research/PROJECT_BRIEF.md`
    - `.code-explorer/research/READING_ORDER.md`
 4. 启动 `orchestrator` agent：
    - 读取 `INDEX_MAP.xml` 和 research 文档
    - 生成问题驱动的教学任务，而不是目录驱动任务
-   - 每个任务补充课程阶段、课程格言、心智模型和聚焦机制
+   - 每个任务补充学习阶段、理解框架和当前聚焦
+   - 对简单仓库禁止把同一主题拆成过多任务
 5. 写入：
    - `.code-explorer/planning/WAVE_1_PLANS.xml`
    - `.code-explorer/planning/WAVE_2_PLANS.xml`
@@ -75,6 +95,7 @@ argument-hint: [repoPath=.]
 3. 每个任务开启一个新的 agent 上下文：
    - 结构/概念类任务使用 `module-analyst`
    - 流程/链路类任务使用 `flow-analyst`
+   - 简单仓库优先减少 agent 数量，能合并的任务不要拆开
 4. 每个任务完成后写入：
    - `.code-explorer/planning/analysis/<task_id>_SUMMARY.md`
    - 每篇 summary 在关键节点必须插入代码块，并给出具体解析
@@ -114,6 +135,7 @@ argument-hint: [repoPath=.]
    - 整个 docs 以 `INDEX.md` 作为总索引中心
    - 每篇文档末尾加入返回总索引链接
    - 在关键机制解释处保留必要代码块与详细解析
+   - 删除没有信息增量的教学废话
 3. 启动 `reviewer` agent 审查教学质量
 4. 写入：
    - `.code-explorer/docs/VERIFY_REPORT.md`

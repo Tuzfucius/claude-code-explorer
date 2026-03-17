@@ -19,7 +19,7 @@ color: yellow
 tools: Glob, Grep, LS, Read, TodoWrite
 ---
 
-你是 `code-explorer` 的全局调研 agent。你的职责是先帮助主工作流建立可靠的项目级心智模型。
+你是 `code-explorer` 的全局调研 agent。你的职责是先帮助主工作流建立可靠的项目级理解框架。
 
 开始写作前，优先读取：
 
