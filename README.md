@@ -1,137 +1,99 @@
 # code-explorer
 
-`code-explorer` 是一个面向 Claude Code 的原生插件，用于把陌生代码仓库整理成一套适合人类学习的文档库。
+`code-explorer` 是一个面向 Claude Code 的原生插件，用于把陌生代码仓库整理成可教学、可检索、可审查的文档库。  
+`code-explorer` is a Claude Code native plugin that transforms unfamiliar repositories into a teachable, searchable, and reviewable documentation workspace.
 
-它的目标不是生成简单摘要，而是围绕“这个项目解决什么问题、核心链路如何运作、为什么这样设计、先从哪里开始读”输出结构化学习材料。插件通过 slash commands、专用 agents、skills 和模板体系，在目标仓库内维护 `.code-explorer/` 工作区，并生成多份教学型文档。
+## 项目目标 | Project Goals
 
-## 核心能力
+- 不是做“摘要生成器”，而是输出结构化学习材料。  
+  Not a plain summarizer; it generates structured learning materials.
+- 关注四个问题：项目解决什么问题、核心链路如何运作、为什么这样设计、如何开始阅读。  
+  Focus on four questions: what problem is solved, how the core flow works, why the design exists, and where to start reading.
+- 在目标仓库中维护 `.code-explorer/` 工作区，沉淀多份教学文档。  
+  Maintain a `.code-explorer/` workspace in the target repo and produce a set of learning docs.
 
-- 采用严格的五阶段工作流组织仓库分析
-- 用多角色 agent 分工完成调研、规划、讲解、架构提炼、写作和审稿
-- 用 XML 状态文件维护阶段流转，便于恢复和检查
-- 用模板约束文档结构，减少“罗列式”输出
-- 在关键节点强制插入源码片段，并要求给出具体解释
-- 为长文档生成目录、总索引和文末回链，提升可读性
-- 借鉴 `learn-claude-code` 的递进式教学方式，为文档增加课程阶段、心智模型与聚焦机制
+## 核心能力 | Core Capabilities
 
-## 工作流概览
+- 五阶段工作流（映射、计划、执行、提炼、交付）  
+  Five-phase workflow (map, plan, execute, synthesize, publish)
+- 多角色 agents 分工协作（调研、编排、讲解、架构提炼、写作、审稿）  
+  Multi-agent collaboration (research, orchestration, explanation, architecture synthesis, writing, review)
+- XML 状态文件驱动阶段流转与恢复  
+  XML state files for phase transitions and resumability
+- 模板 + 规则约束输出结构与质量门禁  
+  Templates + rules as structure and quality gates
+- 强制关键源码证据与解释，避免空泛结论  
+  Enforced code evidence and explanations to avoid generic claims
 
-`code-explorer` 采用五个阶段：
+## 工作流概览 | Workflow Overview
 
-1. 映射与索引：生成仓库骨架索引 `INDEX_MAP.xml`
-2. 全局调研与计划：识别主链路、亮点与阅读顺序，拆分三波教学任务
-3. 波次执行：按任务生成模块讲解和主链路分析
-4. 架构与亮点提炼：生成系统架构文档与亮点文档
-5. 组装交付与校验：输出完整 docs，并进行教学质量审查
+1. 映射与索引（Phase 0）  
+   Mapping & Indexing
+2. 全局调研与计划（Phase 1）  
+   Research & Planning
+3. 波次执行（Phase 2）  
+   Wave Execution
+4. 架构与亮点提炼（Phase 3）  
+   Architecture & Highlights Synthesis
+5. 组装交付与校验（Phase 4）  
+   Publishing & Verification
 
-其中第 2 到第 5 阶段额外吸收三类教学特征：
+教学增强特征（Phase 1-4）/ Teaching Enhancements (Phase 1-4):
 
-- 递进课程：告诉读者当前内容属于哪个学习阶段
-- 心智模型优先：先建立理解框架，再进入源码细节
-- 单机制聚焦：每一篇核心文档优先讲清一个最值得掌握的机制
+- 递进课程 Progressive course framing
+- 心智模型优先 Mental-model-first explanation
+- 单机制聚焦 One-core-mechanism focus
 
-所有产物统一写入目标仓库根目录下的 `.code-explorer/`。
+## 插件命令 | Slash Commands
 
-## 插件命令
+- `/code-explorer [repoPath]`：标准五阶段流程  
+  Standard 5-phase workflow
+- `/code-explorer-quick-tour [repoPath]`：轻量导览  
+  Lightweight quick tour
+- `/code-explorer-deep-course [repoPath]`：完整课程化文档  
+  Full course-style documentation
+- `/code-explorer-status [repoPath]`：查看当前状态  
+  Inspect current workflow status
+- `/code-explorer-verify [repoPath]`：校验文档质量  
+  Verify document quality
 
-当前提供以下 slash commands：
+## 目录架构 | Repository Architecture
 
-- `/code-explorer [repoPath]`
-  - 运行标准五阶段工作流
-- `/code-explorer-quick-tour [repoPath]`
-  - 生成轻量导览版文档，适合先看整体轮廓
-- `/code-explorer-deep-course [repoPath]`
-  - 生成完整的课程式学习文档库
-- `/code-explorer-status [repoPath]`
-  - 检查 `.code-explorer/` 当前阶段状态
-- `/code-explorer-verify [repoPath]`
-  - 审查已有文档的结构、证据和教学质量
+- `.claude-plugin/`：插件元数据 / Plugin metadata
+- `commands/`：命令入口 / Slash-command entry points
+- `agents/`：专用角色 / Specialized agents
+- `skills/`：工作区与输出规范 / Workspace and output conventions
+- `templates/`：文档与 XML 模板 / Document and XML templates
+- `scripts/`：安装脚本 / Installation scripts
+- `hooks/`：hooks 设计说明 / Hook design notes
 
-## 专用 Agents
+详见 [PLUGIN_STRUCTURE.md](./PLUGIN_STRUCTURE.md)。
 
-- `scout`
-  - 全局调研，判断项目目标、主逻辑目录、亮点与推荐阅读顺序
-- `orchestrator`
-  - 把调研结果转成问题驱动的教学任务
-- `module-analyst`
-  - 讲解模块职责、边界和设计意图
-- `flow-analyst`
-  - 追踪主链路、状态流转和跨模块协作
-- `architect`
-  - 汇总系统架构与项目亮点
-- `writer`
-  - 重写为适合学习的文档集
-- `reviewer`
-  - 审查教学质量，指出需要重写的问题
+## 模板体系 | Template System
 
-## Skills 与模板
+模板位于 [templates/README.md](./templates/README.md)，分为：
 
-插件使用两个核心技能：
+- Docs templates（Markdown 输出骨架）
+- XML templates（状态与计划骨架）
+- Rules files（硬约束与审查标准）
 
-- [skills/code-explorer-workspace/SKILL.md](./skills/code-explorer-workspace/SKILL.md)
-  - 统一 `.code-explorer/` 工作区结构和 XML 状态文件规范
-- [skills/code-explorer-output-style/SKILL.md](./skills/code-explorer-output-style/SKILL.md)
-  - 统一教学型文档的输出标准
-- [skills/code-explorer-teaching-playbook/SKILL.md](./skills/code-explorer-teaching-playbook/SKILL.md)
-  - 注入课程阶段、心智模型优先和单机制聚焦的教学方法
-
-模板位于 [templates/README.md](./templates/README.md)，包括：
-
-- 文档模板
-  - [templates/docs/module.template.md](./templates/docs/module.template.md)
-  - [templates/docs/architecture.template.md](./templates/docs/architecture.template.md)
-  - [templates/docs/highlights.template.md](./templates/docs/highlights.template.md)
-  - [templates/docs/index.template.md](./templates/docs/index.template.md)
-  - [templates/docs/readme.template.md](./templates/docs/readme.template.md)
-  - [templates/docs/start-here.template.md](./templates/docs/start-here.template.md)
-  - [templates/docs/learning-path.template.md](./templates/docs/learning-path.template.md)
-  - [templates/docs/verify-report.template.md](./templates/docs/verify-report.template.md)
-  - [templates/docs/research-brief.template.md](./templates/docs/research-brief.template.md)
-- XML 模板
-  - [templates/xml/index-map.template.xml](./templates/xml/index-map.template.xml)
-  - [templates/xml/phase-status.template.xml](./templates/xml/phase-status.template.xml)
-  - [templates/xml/wave-plan.template.xml](./templates/xml/wave-plan.template.xml)
-
-## 生成结果
-
-典型输出目录如下：
+## 生成结果示例 | Example Output
 
 ```text
 .code-explorer/
 ├─ INDEX_MAP.xml
 ├─ research/
-│  ├─ PROJECT_BRIEF.md
-│  └─ READING_ORDER.md
 ├─ planning/
-│  ├─ WAVE_1_PLANS.xml
-│  ├─ WAVE_2_PLANS.xml
-│  ├─ WAVE_3_PLANS.xml
-│  └─ analysis/
-│     └─ <task_id>_SUMMARY.md
 ├─ docs/
-│  ├─ README.md
-│  ├─ COURSE_OVERVIEW.md
-│  ├─ START_HERE.md
-│  ├─ INDEX.md
-│  ├─ CORE_CONCEPTS.md
-│  ├─ SYSTEM_ARCHITECTURE.md
-│  ├─ HIGHLIGHTS.md
-│  ├─ LEARNING_PATH_BEGINNER.md
-│  ├─ LEARNING_PATH_ADVANCED.md
-│  ├─ GLOSSARY.md
-│  ├─ VERIFY_REPORT.md
-│  └─ modules/
 └─ state/
-   ├─ PHASE_0_MAP_STATUS.xml
-   ├─ PHASE_1_PLAN_STATUS.xml
-   ├─ PHASE_2_WAVE_STATUS.xml
-   ├─ PHASE_3_SYNTHESIS_STATUS.xml
-   └─ PHASE_4_PUBLISH_STATUS.xml
 ```
 
-## 使用方式
+详细示例见原工作流输出约定。  
+For detailed output examples, follow the workflow output conventions.
 
-### 1. 安装插件
+## 安装与使用 | Setup and Usage
+
+### 1) 安装 | Install
 
 Windows:
 
@@ -145,120 +107,34 @@ macOS / Linux:
 bash ./scripts/install.sh
 ```
 
-更完整的部署说明见 [DEPLOY.md](./DEPLOY.md)。
-
-### 2. 本地加载插件
-
-在 Claude Code 环境中使用本仓库作为插件目录：
+### 2) 加载插件 | Load Plugin
 
 ```powershell
 claude --plugin-dir <code-explorer-repo-path>
 ```
 
-例如：
-
-```powershell
-claude --plugin-dir E:\Project\code-explorer
-```
-
-### 3. 在目标仓库中调用命令
-
-进入 Claude Code 后，在目标仓库里直接使用：
+### 3) 在目标仓库执行 | Run in Target Repository
 
 ```text
 /code-explorer .
-```
-
-常见用法：
-
-```text
 /code-explorer-quick-tour .
 /code-explorer-deep-course .
 /code-explorer-status .
 /code-explorer-verify .
 ```
 
-### 4. 推荐阅读顺序
+## 相关文档 | Related Documents
 
-如果你只是第一次接触一个仓库，建议按以下顺序使用：
-
-1. `/code-explorer-quick-tour .`
-2. 阅读 `.code-explorer/docs/START_HERE.md`
-3. 阅读 `.code-explorer/docs/COURSE_OVERVIEW.md`
-4. 阅读 `.code-explorer/docs/HIGHLIGHTS.md`
-5. 再运行 `/code-explorer-deep-course .`
-6. 最后用 `/code-explorer-verify .` 检查文档质量
-
-## 仓库结构
-
-与 GitHub 使用最相关的目录如下：
-
-- [.claude-plugin/README.md](./.claude-plugin/README.md)
-  - 插件元数据说明
-- [PLUGIN_STRUCTURE.md](./PLUGIN_STRUCTURE.md)
-  - 目录结构和自动发现约束
-- [commands](./commands)
-  - slash commands 定义
-- [agents](./agents)
-  - 专用 agent 定义
-- [skills](./skills)
-  - 工作区和文档规范技能
-- [templates/README.md](./templates/README.md)
-  - 模板总览
-- [hooks/README.md](./hooks/README.md)
-  - hooks 设计说明
-- [scripts/README.md](./scripts/README.md)
-  - 可选辅助脚本说明
-- [CODE_EXPLORER_CLAUDE_CODE_PLUGIN_PLAN.md](./CODE_EXPLORER_CLAUDE_CODE_PLUGIN_PLAN.md)
-  - 当前插件化设计方案
-
-## 设计原则
-
-- Claude 主导理解与写作，插件负责组织流程
-- 先讲问题，再讲结构，再讲流程，再讲设计原因
-- 关键结论必须有源码证据
-- 模板只约束结构，不替代实际分析
-- 输出必须服务于“学习”而不是“罗列”
-
-## 当前边界
-
-当前项目已经完全迁移为 Claude Code 原生插件，不再维护旧版本地 CLI 作为主执行路径。
-
-这也意味着：
-
-- 本仓库不是通用 npm CLI 工具
-- 主工作流依赖 Claude Code 的 commands、agents 和 skills 机制
-- 文档质量高度依赖 Claude 在执行时是否按模板和规则运行
-
-## 开发与调试
-
-如果要继续扩展本仓库，建议优先修改以下位置：
-
-- `commands/`
-  - 调整工作流编排
-- `agents/`
-  - 调整角色边界和输出职责
-- `skills/`
-  - 调整统一规范
-- `templates/`
-  - 调整文档骨架和 XML 结构
-
-更新后建议至少做两项检查：
-
-1. 本地加载检查
-
-```powershell
-claude --plugin-dir .
-```
-
-2. 命令识别检查
-
-```powershell
-claude --plugin-dir . -p "列出当前 code-explorer 插件可用的 slash commands 名称，每行一个。"
-```
-
-## 相关文档
-
+- [DEPLOY.md](./DEPLOY.md)
 - [PLUGIN_STRUCTURE.md](./PLUGIN_STRUCTURE.md)
 - [templates/README.md](./templates/README.md)
 - [CODE_EXPLORER_CLAUDE_CODE_PLUGIN_PLAN.md](./CODE_EXPLORER_CLAUDE_CODE_PLUGIN_PLAN.md)
+
+## 设计原则 | Design Principles
+
+- Claude 主导理解与写作，插件负责流程组织。  
+  Claude leads understanding and writing; the plugin organizes workflow.
+- 结论必须有源码证据。  
+  Conclusions must be backed by source evidence.
+- 模板约束结构，不替代真实分析。  
+  Templates constrain structure, not real analysis.
