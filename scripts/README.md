@@ -1,28 +1,43 @@
 # scripts
 
-该目录预留给可选的辅助脚本。
+该目录存放 `code-explorer` 的辅助安装与校验脚本。
 
-## 当前定位
+## 当前脚本
 
-`code-explorer` 已经完全迁移为 Claude Code 原生插件，主工作流由 `commands/`、`agents/`、`skills/` 和 `templates/` 共同完成，不依赖独立 runtime。
+- `install.ps1`
+  - Windows 安装脚本
+  - 将当前仓库复制到 Claude 插件目录，并执行安装后自检
+- `install.sh`
+  - macOS / Linux 安装脚本
+  - 将当前仓库复制到 Claude 插件目录，并执行安装后自检
 
-因此，`scripts/` 目录中的内容只能承担辅助作用，不能成为主执行前提。
+## 设计边界
 
-## 适合放在这里的脚本
+这些脚本只负责安装、复制和自检，不承担主工作流。
 
-- XML 状态模板检查
-- 工作区目录初始化辅助脚本
-- 文档质量离线检查
-- 结构性 lint 或链接检查
+主工作流仍然完全由以下目录驱动：
 
-## 不应放在这里的内容
+- `commands/`
+- `agents/`
+- `skills/`
+- `templates/`
 
-- 替代 `/code-explorer` 主命令的独立执行器
-- 与插件逻辑分叉的第二套工作流
-- 必须先跑脚本才能使用插件的前置依赖
+## 推荐使用方式
+
+### Windows
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1
+```
+
+### macOS / Linux
+
+```bash
+bash ./scripts/install.sh
+```
 
 ## 维护原则
 
-- 能用 Claude Code 原生命令完成的，不额外写脚本
-- 只有当脚本能显著降低重复劳动时，才值得引入
-- 脚本应服务模板、校验和初始化，而不是重新引入旧 CLI 架构
+- 脚本只做重复性安装工作
+- 不引入第二套运行时
+- 所有安装完成后都应能用 `claude --plugin-dir <path>` 直接验证

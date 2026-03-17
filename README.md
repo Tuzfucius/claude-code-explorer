@@ -131,7 +131,23 @@
 
 ## 使用方式
 
-### 1. 本地加载插件
+### 1. 安装插件
+
+Windows:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1
+```
+
+macOS / Linux:
+
+```bash
+bash ./scripts/install.sh
+```
+
+更完整的部署说明见 [DEPLOY.md](./DEPLOY.md)。
+
+### 2. 本地加载插件
 
 在 Claude Code 环境中使用本仓库作为插件目录：
 
@@ -145,7 +161,7 @@ claude --plugin-dir <code-explorer-repo-path>
 claude --plugin-dir E:\Project\code-explorer
 ```
 
-### 2. 在目标仓库中调用命令
+### 3. 在目标仓库中调用命令
 
 进入 Claude Code 后，在目标仓库里直接使用：
 
@@ -162,7 +178,7 @@ claude --plugin-dir E:\Project\code-explorer
 /code-explorer-verify .
 ```
 
-### 3. 推荐阅读顺序
+### 4. 推荐阅读顺序
 
 如果你只是第一次接触一个仓库，建议按以下顺序使用：
 
