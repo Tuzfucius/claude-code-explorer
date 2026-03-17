@@ -1,23 +1,49 @@
 # code-explorer
 
-`code-explorer` 是一个面向 Claude Code 的本地 CLI，用于对全新代码仓库执行五阶段分析流程，生成可学习、可导航的 Markdown 文档库。
+`code-explorer` 已重建为 Claude Code 原生插件。
 
-## 当前范围
+它的目标是在 Claude Code 内部直接完成一个严格五阶段的教学型仓库学习工作流，而不是依赖外部 CLI 或本地 runtime。插件通过 slash commands、专用 agents 和 skills，把陌生代码仓库整理成适合人类学习的多文档资料库。
 
-- `init`：生成默认配置与 Claude Code 集成文件
-- `run`：执行五阶段工作流
-- `status`：读取状态文件并展示进度
-- `verify`：校验最终文档、链接与 Mermaid 语法
+## 当前设计
 
-## 开发
+核心原则：
 
-```bash
-npm install
-npm run build
-npm test
+1. 完全采用 Claude Code 原生插件结构
+2. 用 commands 驱动工作流
+3. 用 agents 分工完成调研、规划、讲解、架构提炼、写作和审稿
+4. 用 skills 统一状态文件和教学输出规范
+5. 所有产物写入目标仓库的 `.code-explorer/`
+
+## 插件结构
+
+- [.claude-plugin/README.md](./.claude-plugin/README.md)：插件元数据
+- [PLUGIN_STRUCTURE.md](./PLUGIN_STRUCTURE.md)：插件目录结构与自动发现约束
+- [hooks/README.md](./hooks/README.md)：hooks 设计说明
+- [scripts/README.md](./scripts/README.md)：可选辅助脚本说明
+- [CODE_EXPLORER_CLAUDE_CODE_PLUGIN_PLAN.md](./CODE_EXPLORER_CLAUDE_CODE_PLUGIN_PLAN.md)：迁移与设计方案
+
+## 本地加载
+
+```powershell
+claude --plugin-dir E:\Project\code-explorer
 ```
 
-## 输出目录
+进入 Claude Code 后可使用：
 
-运行时会将中间状态和最终文档写入目标仓库下的 `.code-explorer/` 目录，不会修改目标仓库业务源码。
+```text
+/code-explorer .
+/code-explorer-quick-tour .
+/code-explorer-deep-course .
+/code-explorer-status .
+/code-explorer-verify .
+```
 
+## 五阶段目标
+
+1. 映射与索引
+2. 全局调研与任务规划
+3. 波次执行
+4. 架构与亮点提炼
+5. 交付与校验
+
+这些阶段全部由 Claude Code 原生工作流组织，不再依赖旧版 TypeScript CLI。
