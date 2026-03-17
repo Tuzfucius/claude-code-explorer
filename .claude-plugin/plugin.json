@@ -1,0 +1,9 @@
+{
+  "name": "code-explorer",
+  "version": "1.0.0",
+  "description": "Claude Code 原生教学型仓库学习插件。通过多阶段命令、专用 agents 和技能，把陌生代码仓库整理成适合人类学习的文档库。",
+  "author": {
+    "name": "Code Explorer",
+    "email": "support@example.com"
+  }
+}

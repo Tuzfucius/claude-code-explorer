@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_plan>
+  <wave>{{wave}}</wave>
+  <tasks>
+    <item>
+      <task_id>{{task_id}}</task_id>
+      <wave>{{wave}}</wave>
+      <title>{{title}}</title>
+      <goal>{{goal}}</goal>
+      <lesson_stage>{{lesson_stage}}</lesson_stage>
+      <lesson_tagline>{{lesson_tagline}}</lesson_tagline>
+      <mental_model>{{mental_model}}</mental_model>
+      <focus_mechanism>{{focus_mechanism}}</focus_mechanism>
+      <scope_files>
+        <item>{{scope_file_1}}</item>
+      </scope_files>
+      <depends_on>
+        <item>{{depends_on_1}}</item>
+      </depends_on>
+      <required_summaries>
+        <item>{{required_summary_1}}</item>
+      </required_summaries>
+      <agent_role>{{agent_role}}</agent_role>
+      <output_path>{{output_path}}</output_path>
+      <acceptance_checks>
+        <item>{{acceptance_check_1}}</item>
+      </acceptance_checks>
+    </item>
+  </tasks>
+</wave_plan>

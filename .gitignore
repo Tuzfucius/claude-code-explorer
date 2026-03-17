@@ -6,3 +6,4 @@ coverage/
 .code-explorer/
 *.log
 *.tsbuildinfo
+.claude
