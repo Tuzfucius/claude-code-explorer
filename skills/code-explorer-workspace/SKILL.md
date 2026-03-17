@@ -86,3 +86,39 @@ description: Maintain the .code-explorer workspace consistently. Use this skill 
 2. 失败时也必须写状态文件
 3. 文档和状态要相互对应，不能只写文档不写状态
 4. 不要把业务源码写进 `.code-explorer/`
+
+## docs 总索引架构
+
+`docs/INDEX.md` 是整个文档库的总导航入口，必须承担“一键跳转”的职责。
+
+建议至少包含以下区块：
+
+- 按学习目标看
+- 按系统层次看
+- 按关键链路看
+- 按源码位置看
+- 按阅读路径看
+- 模块文档入口
+- 关键亮点入口
+
+`docs/README.md` 应该是面向读者的首页，但它不是完整索引。完整跳转中心必须是 `docs/INDEX.md`。
+
+## 文档导航规则
+
+1. 所有顶层文档都要链接到 `INDEX.md`
+2. 所有模块文档都要能返回 `../INDEX.md`
+3. `START_HERE.md`、`LEARNING_PATH_BEGINNER.md`、`LEARNING_PATH_ADVANCED.md` 都应显式指向具体模块文档
+4. `HIGHLIGHTS.md` 与 `SYSTEM_ARCHITECTURE.md` 中引用的模块，应该尽量提供对应文档链接
+
+## 长文目录规则
+
+如果文档已经成为长文，必须在开头引言后增加“目录”。
+
+推荐适用对象：
+
+- `SYSTEM_ARCHITECTURE.md`
+- `HIGHLIGHTS.md`
+- `CORE_CONCEPTS.md`
+- `LEARNING_PATH_BEGINNER.md`
+- `LEARNING_PATH_ADVANCED.md`
+- 长模块文档

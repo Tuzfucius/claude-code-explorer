@@ -71,6 +71,7 @@ argument-hint: [repoPath=.]
    - 流程/链路类任务使用 `flow-analyst`
 4. 每个任务完成后写入：
    - `.code-explorer/planning/analysis/<task_id>_SUMMARY.md`
+   - 每篇 summary 在关键节点必须插入代码块，并给出具体解析
 5. 波次之间必须有 barrier；下一波次读取上一波次 summary 作为前置材料
 6. 更新 `PHASE_2_WAVE_STATUS.xml` 为 `completed`
 
@@ -98,6 +99,11 @@ argument-hint: [repoPath=.]
    - `.code-explorer/docs/LEARNING_PATH_BEGINNER.md`
    - `.code-explorer/docs/LEARNING_PATH_ADVANCED.md`
    - `.code-explorer/docs/GLOSSARY.md`
+3. `writer` 生成文档时，必须遵守以下规范：
+   - 长文档加入目录
+   - 整个 docs 以 `INDEX.md` 作为总索引中心
+   - 每篇文档末尾加入返回总索引链接
+   - 在关键机制解释处保留必要代码块与详细解析
 3. 启动 `reviewer` agent 审查教学质量
 4. 写入：
    - `.code-explorer/docs/VERIFY_REPORT.md`
