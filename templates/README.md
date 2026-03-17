@@ -1,53 +1,67 @@
 # Templates
 
-该目录存放 `code-explorer` 的模板资产。
+该目录存放 `code-explorer` 的模板资产。  
+This directory stores template assets for `code-explorer`.
 
-## 目录结构
+## 目录结构 | Directory Structure
 
-- `docs/`
-  - Markdown 文档模板与写作规则
-- `xml/`
-  - 状态文件和任务计划的 XML 模板
+- `docs/`：Markdown 文档模板与规则 / Markdown templates and rules
+- `xml/`：状态与计划 XML 模板 / XML templates for state and planning
 
-## 设计目标
+## 设计目标 | Design Goals
 
-模板的作用不是替 Claude 写内容，而是约束输出骨架和硬性字段，避免文档退化为：
+模板不替 Claude 写内容，而是约束输出骨架和硬性字段。  
+Templates do not write content for Claude; they enforce output skeletons and required fields.
 
-- 目录转录
-- 文件罗列
-- 空泛套话
-- 缺少代码证据的结论
+它们用于避免以下问题：  
+They help avoid:
 
-## 模板分类
+- 目录转录 / directory-only transcription
+- 文件罗列 / file listing without explanation
+- 空泛套话 / generic statements
+- 缺少代码证据 / claims without code evidence
 
-- `docs/`
-  - 面向学习者的 Markdown 文档模板
-- `xml/`
-  - 面向工作流状态流转的 XML 模板
+## 模板分类 | Template Categories
 
-## 使用原则
+### `docs/`
 
-1. agents 在生成文档前，应优先参考对应模板。
-2. `*.template.md` 提供结构骨架。
-3. `*.rules.md` 提供质量门禁与填充说明。
-4. XML 模板用于保证状态文件和计划文件结构一致。
+- 面向学习者的 Markdown 模板 / Learner-facing Markdown templates
+- `*.template.md`：结构骨架 / Structure skeletons
+- `*.rules.md`：质量门禁与填充要求 / Quality gates and fill-in requirements
 
-## 使用建议
+### `xml/`
 
-如果你要继续扩展 `code-explorer`，建议优先从模板入手，而不是直接修改命令文案。因为最终文档质量最容易受以下几类模板影响：
+- 面向流程状态的 XML 模板 / Workflow-state XML templates
+- 保证状态文件与计划文件字段一致 / Keep state/plan schema consistent
 
-- 模块讲解模板
-- 架构模板
-- 亮点模板
-- 总索引模板
-- 校验报告模板
+## 使用原则 | Usage Principles
 
-当模板稳定后，再去调整 `writer`、`architect`、`reviewer` 的规则，通常会更稳。
+1. 生成文档前先选择对应模板。  
+   Select the corresponding template before generating content.
+2. 先满足结构，再补充内容深度。  
+   Satisfy structure first, then improve depth.
+3. 优先遵循 rules 文件中的硬约束。  
+   Follow hard constraints in rules files first.
 
-## 新增课程化模板
+## 扩展建议 | Extension Guidance
 
-为融入 `learn-claude-code` 的教学方式，`docs/` 目录现在额外支持：
+若要提升输出质量，建议优先调整模板，再调整 agent 文案。  
+To improve output quality, tune templates first, then agent prompts.
+
+优先级建议：  
+Suggested priority:
+
+1. `module.template.md`
+2. `architecture.template.md`
+3. `highlights.template.md`
+4. `index.template.md`
+5. `verify-report.template.md`
+
+## 课程化模板支持 | Course-style Template Support
+
+`docs/` 额外提供：  
+`docs/` additionally provides:
 
 - `course-overview.template.md`
-  - 用于生成 `COURSE_OVERVIEW.md`
-  - 说明学习阶段、课程格言、心智模型和聚焦机制
+  - 用于生成 `COURSE_OVERVIEW.md` / For `COURSE_OVERVIEW.md`
+  - 覆盖学习阶段、心智模型与聚焦机制 / Covers stage, mental model, and focus mechanism
