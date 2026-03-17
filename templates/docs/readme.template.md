@@ -14,6 +14,7 @@
 
 - [总索引](./INDEX.md)
 - [快速开始](./START_HERE.md)
+- [课程总览](./COURSE_OVERVIEW.md)
 - [系统架构](./SYSTEM_ARCHITECTURE.md)
 - [亮点提炼](./HIGHLIGHTS.md)
 - [初学者路径](./LEARNING_PATH_BEGINNER.md)

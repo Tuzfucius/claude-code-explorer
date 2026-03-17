@@ -12,6 +12,7 @@
 - 用模板约束文档结构，减少“罗列式”输出
 - 在关键节点强制插入源码片段，并要求给出具体解释
 - 为长文档生成目录、总索引和文末回链，提升可读性
+- 借鉴 `learn-claude-code` 的递进式教学方式，为文档增加课程阶段、心智模型与聚焦机制
 
 ## 工作流概览
 
@@ -22,6 +23,12 @@
 3. 波次执行：按任务生成模块讲解和主链路分析
 4. 架构与亮点提炼：生成系统架构文档与亮点文档
 5. 组装交付与校验：输出完整 docs，并进行教学质量审查
+
+其中第 2 到第 5 阶段额外吸收三类教学特征：
+
+- 递进课程：告诉读者当前内容属于哪个学习阶段
+- 心智模型优先：先建立理解框架，再进入源码细节
+- 单机制聚焦：每一篇核心文档优先讲清一个最值得掌握的机制
 
 所有产物统一写入目标仓库根目录下的 `.code-explorer/`。
 
@@ -65,6 +72,8 @@
   - 统一 `.code-explorer/` 工作区结构和 XML 状态文件规范
 - [skills/code-explorer-output-style/SKILL.md](./skills/code-explorer-output-style/SKILL.md)
   - 统一教学型文档的输出标准
+- [skills/code-explorer-teaching-playbook/SKILL.md](./skills/code-explorer-teaching-playbook/SKILL.md)
+  - 注入课程阶段、心智模型优先和单机制聚焦的教学方法
 
 模板位于 [templates/README.md](./templates/README.md)，包括：
 
@@ -101,6 +110,7 @@
 │     └─ <task_id>_SUMMARY.md
 ├─ docs/
 │  ├─ README.md
+│  ├─ COURSE_OVERVIEW.md
 │  ├─ START_HERE.md
 │  ├─ INDEX.md
 │  ├─ CORE_CONCEPTS.md
@@ -158,9 +168,10 @@ claude --plugin-dir E:\Project\code-explorer
 
 1. `/code-explorer-quick-tour .`
 2. 阅读 `.code-explorer/docs/START_HERE.md`
-3. 阅读 `.code-explorer/docs/HIGHLIGHTS.md`
-4. 再运行 `/code-explorer-deep-course .`
-5. 最后用 `/code-explorer-verify .` 检查文档质量
+3. 阅读 `.code-explorer/docs/COURSE_OVERVIEW.md`
+4. 阅读 `.code-explorer/docs/HIGHLIGHTS.md`
+5. 再运行 `/code-explorer-deep-course .`
+6. 最后用 `/code-explorer-verify .` 检查文档质量
 
 ## 仓库结构
 

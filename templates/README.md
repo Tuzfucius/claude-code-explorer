@@ -43,3 +43,11 @@
 - 校验报告模板
 
 当模板稳定后，再去调整 `writer`、`architect`、`reviewer` 的规则，通常会更稳。
+
+## 新增课程化模板
+
+为融入 `learn-claude-code` 的教学方式，`docs/` 目录现在额外支持：
+
+- `course-overview.template.md`
+  - 用于生成 `COURSE_OVERVIEW.md`
+  - 说明学习阶段、课程格言、心智模型和聚焦机制

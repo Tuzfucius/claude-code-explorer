@@ -30,6 +30,7 @@ description: Generate teaching-oriented repository learning documents. Use this 
 - `templates/docs/index.template.md`
 - `templates/docs/index.rules.md`
 - `templates/docs/readme.template.md`
+- `templates/docs/course-overview.template.md`
 - `templates/docs/start-here.template.md`
 - `templates/docs/learning-path.template.md`
 - `templates/docs/verify-report.template.md`
@@ -39,6 +40,8 @@ description: Generate teaching-oriented repository learning documents. Use this 
 ## 必须做到
 
 - 先讲问题，再讲结构，再讲流程，再讲设计原因
+- 在正文开头先建立心智模型，再进入源码细节
+- 每篇核心文档优先讲清一个关键机制，而不是把多个主题混成一篇
 - 每个重要判断都要给出源码证据
 - 在关键节点直接插入源码代码块，并解释应关注什么
 - 明确给出阅读顺序
@@ -112,6 +115,8 @@ description: Generate teaching-oriented repository learning documents. Use this 
 
 ## 模块文档推荐结构
 
+- 课程阶段与课程格言
+- 先建立一个心智模型
 - 这个模块解决的问题
 - 阅读前你需要知道什么
 - 核心对象与职责
@@ -119,6 +124,7 @@ description: Generate teaching-oriented repository learning documents. Use this 
 - 设计取舍与原因
 - 容易误解的点
 - 建议继续阅读
+- 返回导航
 
 在“核心对象与职责”和“一条关键执行路径”中，必须插入至少一个代码块并配解释。
 

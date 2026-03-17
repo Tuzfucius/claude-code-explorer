@@ -17,6 +17,7 @@ argument-hint: [repoPath=.]
 
 - `skills/code-explorer-workspace/SKILL.md`
 - `skills/code-explorer-output-style/SKILL.md`
+- `skills/code-explorer-teaching-playbook/SKILL.md`
 
 在写入任何 `.md` 或 `.xml` 产物前，优先读取 `templates/` 中对应模板，按模板骨架组织内容与字段。
 
@@ -56,6 +57,7 @@ argument-hint: [repoPath=.]
 4. 启动 `orchestrator` agent：
    - 读取 `INDEX_MAP.xml` 和 research 文档
    - 生成问题驱动的教学任务，而不是目录驱动任务
+   - 每个任务补充课程阶段、课程格言、心智模型和聚焦机制
 5. 写入：
    - `.code-explorer/planning/WAVE_1_PLANS.xml`
    - `.code-explorer/planning/WAVE_2_PLANS.xml`
@@ -99,13 +101,14 @@ argument-hint: [repoPath=.]
 1. 写入 `PHASE_4_PUBLISH_STATUS.xml`，状态为 `running`
 2. 启动 `writer` agent，生成：
    - `.code-explorer/docs/README.md`
+   - `.code-explorer/docs/COURSE_OVERVIEW.md`
    - `.code-explorer/docs/START_HERE.md`
    - `.code-explorer/docs/INDEX.md`
    - `.code-explorer/docs/CORE_CONCEPTS.md`
    - `.code-explorer/docs/LEARNING_PATH_BEGINNER.md`
    - `.code-explorer/docs/LEARNING_PATH_ADVANCED.md`
    - `.code-explorer/docs/GLOSSARY.md`
-   - 生成前优先参考 `templates/docs/readme.template.md`、`templates/docs/index.template.md`、`templates/docs/start-here.template.md`、`templates/docs/learning-path.template.md`
+   - 生成前优先参考 `templates/docs/readme.template.md`、`templates/docs/course-overview.template.md`、`templates/docs/index.template.md`、`templates/docs/start-here.template.md`、`templates/docs/learning-path.template.md`
 3. `writer` 生成文档时，必须遵守以下规范：
    - 长文档加入目录
    - 整个 docs 以 `INDEX.md` 作为总索引中心
@@ -124,3 +127,4 @@ argument-hint: [repoPath=.]
 2. 指出最应该先读的三份文档
 3. 总结两个最值得学习的设计
 4. 如果存在失败或需要重写的文档，直接指出
+5. 明确课程总览对应的学习阶段划分

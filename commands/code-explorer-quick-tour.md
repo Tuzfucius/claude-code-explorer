@@ -12,6 +12,7 @@ argument-hint: [repoPath=.]
 1. 加载：
    - `skills/code-explorer-workspace/SKILL.md`
    - `skills/code-explorer-output-style/SKILL.md`
+   - `skills/code-explorer-teaching-playbook/SKILL.md`
    - 写文档前优先参考 `templates/docs/` 下对应模板
 2. 只执行轻量版本的阶段 0、阶段 1、阶段 3、阶段 4
 3. 必须至少调用：
@@ -20,6 +21,7 @@ argument-hint: [repoPath=.]
    - 一个 `writer`
 4. 输出最少包含：
    - `.code-explorer/docs/README.md`
+   - `.code-explorer/docs/COURSE_OVERVIEW.md`
    - `.code-explorer/docs/START_HERE.md`
    - `.code-explorer/docs/SYSTEM_ARCHITECTURE.md`
    - `.code-explorer/docs/HIGHLIGHTS.md`

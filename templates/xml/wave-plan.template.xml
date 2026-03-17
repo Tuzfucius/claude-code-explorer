@@ -7,6 +7,10 @@
       <wave>{{wave}}</wave>
       <title>{{title}}</title>
       <goal>{{goal}}</goal>
+      <lesson_stage>{{lesson_stage}}</lesson_stage>
+      <lesson_tagline>{{lesson_tagline}}</lesson_tagline>
+      <mental_model>{{mental_model}}</mental_model>
+      <focus_mechanism>{{focus_mechanism}}</focus_mechanism>
       <scope_files>
         <item>{{scope_file_1}}</item>
       </scope_files>
