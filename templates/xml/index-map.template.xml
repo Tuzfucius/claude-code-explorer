@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<index_map>
+  <generatedAt>{{generated_at}}</generatedAt>
+  <rootPath>{{root_path}}</rootPath>
+  <entries>
+    <item>
+      <path>{{path}}</path>
+      <language>{{language}}</language>
+      <imports>
+        <item>{{import_1}}</item>
+      </imports>
+      <exports>
+        <item>{{export_1}}</item>
+      </exports>
+      <symbols>
+        <item>
+          <kind>{{symbol_kind}}</kind>
+          <name>{{symbol_name}}</name>
+          <signature>{{symbol_signature}}</signature>
+        </item>
+      </symbols>
+    </item>
+  </entries>
+</index_map>

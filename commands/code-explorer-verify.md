@@ -28,5 +28,6 @@ argument-hint: [repoPath=.]
    - 文末是否缺少返回总索引链接
    - `INDEX.md` 是否承担总索引职责
    - 哪些文档应优先重写
+4. 审查时优先参考 `templates/docs/*.rules.md` 与 `templates/docs/*.template.md`，按模板缺失项给出问题
 
 最终向用户汇报最高优先级的 1 到 3 个问题。

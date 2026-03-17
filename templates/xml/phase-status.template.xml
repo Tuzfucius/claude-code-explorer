@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phase_state>
+  <phase>{{phase}}</phase>
+  <status>{{status}}</status>
+  <inputRefs>
+    <item>{{input_ref_1}}</item>
+  </inputRefs>
+  <outputRefs>
+    <item>{{output_ref_1}}</item>
+  </outputRefs>
+  <startedAt>{{started_at}}</startedAt>
+  <finishedAt>{{finished_at}}</finishedAt>
+  <errors>
+    <item>{{error_1}}</item>
+  </errors>
+  <resumeToken>{{resume_token}}</resumeToken>
+  <runner>{{runner}}</runner>
+</phase_state>

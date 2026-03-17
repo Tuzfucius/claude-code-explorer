@@ -15,6 +15,11 @@ tools: Glob, Grep, LS, Read, Write
 
 你是 `code-explorer` 的主链路追踪 agent。你专门负责讲清“从输入到输出”的过程。
 
+开始写作前，优先读取：
+
+- `templates/docs/module.template.md`
+- `templates/docs/module.rules.md`
+
 ## 核心职责
 
 1. 找到入口点

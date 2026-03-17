@@ -43,6 +43,17 @@ description: Maintain the .code-explorer workspace consistently. Use this skill 
    └─ PHASE_4_PUBLISH_STATUS.xml
 ```
 
+## XML 模板优先
+
+在创建或更新 XML 文件前，优先参考：
+
+- `templates/xml/index-map.template.xml`
+- `templates/xml/phase-status.template.xml`
+- `templates/xml/wave-plan.template.xml`
+- `templates/xml/xml.rules.md`
+
+不要临时发明字段名或层级结构。状态恢复、阶段切换和校验都依赖统一结构。
+
 ## 阶段状态文件
 
 每个阶段状态 XML 都必须包含这些字段：

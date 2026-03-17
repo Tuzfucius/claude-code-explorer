@@ -18,6 +18,7 @@
 
 - [.claude-plugin/README.md](./.claude-plugin/README.md)：插件元数据
 - [PLUGIN_STRUCTURE.md](./PLUGIN_STRUCTURE.md)：插件目录结构与自动发现约束
+- [templates/README.md](./templates/README.md)：文档模板与 XML 模板总览
 - [hooks/README.md](./hooks/README.md)：hooks 设计说明
 - [scripts/README.md](./scripts/README.md)：可选辅助脚本说明
 - [CODE_EXPLORER_CLAUDE_CODE_PLUGIN_PLAN.md](./CODE_EXPLORER_CLAUDE_CODE_PLUGIN_PLAN.md)：迁移与设计方案
@@ -47,3 +48,22 @@ claude --plugin-dir E:\Project\code-explorer
 5. 交付与校验
 
 这些阶段全部由 Claude Code 原生工作流组织，不再依赖旧版 TypeScript CLI。
+
+## 模板优先生成
+
+当前插件已经提供模板目录，生成文档和状态文件时应优先参考：
+
+- [templates/docs/module.template.md](./templates/docs/module.template.md)
+- [templates/docs/architecture.template.md](./templates/docs/architecture.template.md)
+- [templates/docs/highlights.template.md](./templates/docs/highlights.template.md)
+- [templates/docs/index.template.md](./templates/docs/index.template.md)
+- [templates/docs/readme.template.md](./templates/docs/readme.template.md)
+- [templates/docs/start-here.template.md](./templates/docs/start-here.template.md)
+- [templates/docs/learning-path.template.md](./templates/docs/learning-path.template.md)
+- [templates/docs/verify-report.template.md](./templates/docs/verify-report.template.md)
+- [templates/docs/research-brief.template.md](./templates/docs/research-brief.template.md)
+- [templates/xml/index-map.template.xml](./templates/xml/index-map.template.xml)
+- [templates/xml/phase-status.template.xml](./templates/xml/phase-status.template.xml)
+- [templates/xml/wave-plan.template.xml](./templates/xml/wave-plan.template.xml)
+
+模板负责约束结构和硬性字段，不替代实际分析。Claude 应先遵守模板，再根据源码证据完成讲解。

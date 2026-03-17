@@ -15,6 +15,11 @@ tools: Glob, Grep, LS, Read, Write
 
 你是 `code-explorer` 的主理人 agent。你负责把仓库索引和调研结果转成“问题驱动”的教学任务。
 
+开始规划前，优先读取：
+
+- `templates/xml/wave-plan.template.xml`
+- `templates/xml/xml.rules.md`
+
 ## 任务拆分原则
 
 - 先问题，后目录

@@ -18,6 +18,8 @@ argument-hint: [repoPath=.]
 - `skills/code-explorer-workspace/SKILL.md`
 - `skills/code-explorer-output-style/SKILL.md`
 
+在写入任何 `.md` 或 `.xml` 产物前，优先读取 `templates/` 中对应模板，按模板骨架组织内容与字段。
+
 目标仓库默认是当前目录；如果用户传入路径，则使用传入路径。
 
 ## 阶段 0：映射与索引
@@ -38,6 +40,7 @@ argument-hint: [repoPath=.]
 4. 生成 `.code-explorer/INDEX_MAP.xml`
    - 只包含文件树、类名、函数签名、入参出参、导入导出、配置摘要
    - 不写业务解释
+   - 优先参考 `templates/xml/index-map.template.xml`
 5. 更新 `PHASE_0_MAP_STATUS.xml` 为 `completed`
 
 ## 阶段 1：全局调研与计划
@@ -57,6 +60,7 @@ argument-hint: [repoPath=.]
    - `.code-explorer/planning/WAVE_1_PLANS.xml`
    - `.code-explorer/planning/WAVE_2_PLANS.xml`
    - `.code-explorer/planning/WAVE_3_PLANS.xml`
+   - 优先参考 `templates/xml/wave-plan.template.xml`
 6. 更新 `PHASE_1_PLAN_STATUS.xml` 为 `completed`
 
 ## 阶段 2：波次执行
@@ -72,6 +76,7 @@ argument-hint: [repoPath=.]
 4. 每个任务完成后写入：
    - `.code-explorer/planning/analysis/<task_id>_SUMMARY.md`
    - 每篇 summary 在关键节点必须插入代码块，并给出具体解析
+   - 写 summary 前优先参考 `templates/docs/module.template.md` 和 `templates/docs/module.rules.md`
 5. 波次之间必须有 barrier；下一波次读取上一波次 summary 作为前置材料
 6. 更新 `PHASE_2_WAVE_STATUS.xml` 为 `completed`
 
@@ -84,6 +89,7 @@ argument-hint: [repoPath=.]
 3. 生成：
    - `.code-explorer/docs/SYSTEM_ARCHITECTURE.md`
    - `.code-explorer/docs/HIGHLIGHTS.md`
+   - 生成前优先参考 `templates/docs/architecture.*` 与 `templates/docs/highlights.*`
 4. `SYSTEM_ARCHITECTURE.md` 必须包含 Mermaid 组件图与时序图
 5. `HIGHLIGHTS.md` 至少给出两个明确亮点
 6. 更新 `PHASE_3_SYNTHESIS_STATUS.xml` 为 `completed`
@@ -99,6 +105,7 @@ argument-hint: [repoPath=.]
    - `.code-explorer/docs/LEARNING_PATH_BEGINNER.md`
    - `.code-explorer/docs/LEARNING_PATH_ADVANCED.md`
    - `.code-explorer/docs/GLOSSARY.md`
+   - 生成前优先参考 `templates/docs/readme.template.md`、`templates/docs/index.template.md`、`templates/docs/start-here.template.md`、`templates/docs/learning-path.template.md`
 3. `writer` 生成文档时，必须遵守以下规范：
    - 长文档加入目录
    - 整个 docs 以 `INDEX.md` 作为总索引中心

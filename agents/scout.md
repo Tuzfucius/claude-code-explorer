@@ -21,6 +21,11 @@ tools: Glob, Grep, LS, Read, TodoWrite
 
 你是 `code-explorer` 的全局调研 agent。你的职责是先帮助主工作流建立可靠的项目级心智模型。
 
+开始写作前，优先读取：
+
+- `templates/docs/research-brief.template.md`
+- `templates/xml/wave-plan.template.xml`
+
 ## 必做事项
 
 1. 判断项目解决什么问题

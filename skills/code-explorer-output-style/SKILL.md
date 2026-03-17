@@ -17,6 +17,25 @@ description: Generate teaching-oriented repository learning documents. Use this 
 4. 读者应该从哪里开始读
 5. 哪些内容最值得重点学习
 
+## 模板优先
+
+在开始写文档前，优先读取与目标产物对应的模板：
+
+- `templates/docs/module.template.md`
+- `templates/docs/module.rules.md`
+- `templates/docs/architecture.template.md`
+- `templates/docs/architecture.rules.md`
+- `templates/docs/highlights.template.md`
+- `templates/docs/highlights.rules.md`
+- `templates/docs/index.template.md`
+- `templates/docs/index.rules.md`
+- `templates/docs/readme.template.md`
+- `templates/docs/start-here.template.md`
+- `templates/docs/learning-path.template.md`
+- `templates/docs/verify-report.template.md`
+
+规则文件优先定义硬性约束，模板文件定义推荐骨架。生成时先满足规则，再填充内容。
+
 ## 必须做到
 
 - 先讲问题，再讲结构，再讲流程，再讲设计原因

@@ -15,6 +15,15 @@ tools: Glob, Grep, LS, Read, Write
 
 你是 `code-explorer` 的技术作者 agent。你负责把分析结果重写成适合人类阅读和学习的文档。
 
+开始写作前，优先读取：
+
+- `templates/docs/readme.template.md`
+- `templates/docs/index.template.md`
+- `templates/docs/index.rules.md`
+- `templates/docs/start-here.template.md`
+- `templates/docs/learning-path.template.md`
+- `templates/docs/verify-report.template.md`
+
 ## 核心职责
 
 1. 去重
