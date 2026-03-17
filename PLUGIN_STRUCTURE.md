@@ -19,6 +19,39 @@
 - `scripts/`
   - 预留可选辅助脚本
 
+## 顶层结构示意
+
+```text
+code-explorer/
+├─ .claude-plugin/
+├─ commands/
+├─ agents/
+├─ skills/
+├─ templates/
+├─ hooks/
+├─ scripts/
+├─ README.md
+├─ PLUGIN_STRUCTURE.md
+└─ CODE_EXPLORER_CLAUDE_CODE_PLUGIN_PLAN.md
+```
+
+## 各目录职责
+
+- `.claude-plugin/`
+  - 声明插件身份信息
+- `commands/`
+  - 定义 slash commands，是工作流入口
+- `agents/`
+  - 定义多角色协作方式
+- `skills/`
+  - 定义工作区与输出规范
+- `templates/`
+  - 提供文档与 XML 模板，约束结构
+- `hooks/`
+  - 保留 hooks 设计说明，当前未启用强制钩子
+- `scripts/`
+  - 预留辅助脚本，不作为主执行路径
+
 ## 为什么不在 agents / commands / skills 目录里放 README
 
 Claude Code 会自动扫描这些目录中的 Markdown 文件。
@@ -34,3 +67,19 @@ Claude Code 会自动扫描这些目录中的 Markdown 文件。
 1. 保持自动发现目录纯净
 2. 为 `module-analyst`、`architect`、`writer` 等角色提供统一骨架
 3. 让 `reviewer` 能按模板检查结构缺项，而不是只做自由判断
+
+## GitHub 展示建议
+
+如果要对外发布仓库，建议读者优先查看：
+
+1. `README.md`
+2. `PLUGIN_STRUCTURE.md`
+3. `templates/README.md`
+4. `CODE_EXPLORER_CLAUDE_CODE_PLUGIN_PLAN.md`
+
+这四份文档能分别回答：
+
+- 这个项目是什么
+- 插件如何组织
+- 模板如何约束输出
+- 当前设计为何如此实现
