@@ -18,9 +18,9 @@ required_paths=(
   "CODE_EXPLORER_CLAUDE_CODE_PLUGIN_PLAN.md"
 )
 
-echo "准备安装 code-explorer Claude Code 插件..."
-echo "源目录: $REPO_ROOT"
-echo "目标目录: $TARGET_DIR"
+echo "Preparing code-explorer Claude Code plugin..."
+echo "Source repo: $REPO_ROOT"
+echo "Target dir : $TARGET_DIR"
 
 rm -rf "$TARGET_DIR"
 mkdir -p "$TARGET_DIR"
@@ -28,22 +28,22 @@ mkdir -p "$TARGET_DIR"
 for relative_path in "${required_paths[@]}"; do
   source_path="$REPO_ROOT/$relative_path"
   if [[ ! -e "$source_path" ]]; then
-    echo "缺少安装所需路径: $relative_path" >&2
+    echo "Missing required path: $relative_path" >&2
     exit 1
   fi
   cp -R "$source_path" "$TARGET_DIR/$relative_path"
 done
 
 echo
-echo "安装完成。"
-echo "推荐通过以下命令加载插件："
+echo "Install complete."
+echo "Load the plugin with:"
 echo "claude --plugin-dir \"$TARGET_DIR\""
 
 if command -v claude >/dev/null 2>&1; then
   echo
-  echo "开始执行安装后自检..."
-  claude --plugin-dir "$TARGET_DIR" -p "列出当前 code-explorer 插件可用的 slash commands 名称，每行一个。"
+  echo "Running post-install smoke test..."
+  claude --plugin-dir "$TARGET_DIR" -p "List the available code-explorer slash commands, one per line."
 else
   echo
-  echo "未检测到 claude 命令，跳过安装后自检。"
+  echo "claude command was not found. Skipping post-install smoke test."
 fi

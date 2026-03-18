@@ -22,12 +22,12 @@ $requiredPaths = @(
   "CODE_EXPLORER_CLAUDE_CODE_PLUGIN_PLAN.md"
 )
 
-Write-Host "准备安装 code-explorer Claude Code 插件..." -ForegroundColor Cyan
-Write-Host "源目录: $repoRoot"
-Write-Host "目标目录: $TargetDir"
+Write-Host "Preparing code-explorer Claude Code plugin..." -ForegroundColor Cyan
+Write-Host "Source repo: $repoRoot"
+Write-Host "Target dir : $TargetDir"
 
 if ((Test-Path $TargetDir) -and -not $Force) {
-  throw "目标目录已存在。若要覆盖安装，请追加 -Force。"
+  throw "Target directory already exists. Use -Force to overwrite it."
 }
 
 if (Test-Path $TargetDir) {
@@ -39,7 +39,7 @@ New-Item -ItemType Directory -Force -Path $TargetDir | Out-Null
 foreach ($relativePath in $requiredPaths) {
   $sourcePath = Join-Path $repoRoot $relativePath
   if (-not (Test-Path $sourcePath)) {
-    throw "缺少安装所需路径: $relativePath"
+    throw "Missing required path: $relativePath"
   }
 
   $destinationPath = Join-Path $TargetDir $relativePath
@@ -52,19 +52,19 @@ foreach ($relativePath in $requiredPaths) {
 }
 
 Write-Host ""
-Write-Host "安装完成。" -ForegroundColor Green
-Write-Host "推荐通过以下命令加载插件："
+Write-Host "Install complete." -ForegroundColor Green
+Write-Host "Load the plugin with:"
 Write-Host "claude --plugin-dir `"$TargetDir`""
 
 if (-not $SkipSmokeTest) {
   $claude = Get-Command claude -ErrorAction SilentlyContinue
   if ($null -eq $claude) {
-    Write-Warning "未检测到 claude 命令，跳过安装后自检。"
+    Write-Warning "claude command was not found. Skipping post-install smoke test."
     exit 0
   }
 
   Write-Host ""
-  Write-Host "开始执行安装后自检..." -ForegroundColor Cyan
-  $output = & claude --plugin-dir $TargetDir -p "列出当前 code-explorer 插件可用的 slash commands 名称，每行一个。"
+  Write-Host "Running post-install smoke test..." -ForegroundColor Cyan
+  $output = & claude --plugin-dir $TargetDir -p "List the available code-explorer slash commands, one per line."
   Write-Host $output
 }
